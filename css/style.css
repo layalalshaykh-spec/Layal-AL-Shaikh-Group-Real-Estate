@@ -2361,3 +2361,21 @@ html.light .pstat-div{background:rgba(120,95,40,.2)}
   .pb-stars,.pb-sun,.candle-flame{animation:none!important}
   html.light .pb-sun{opacity:1;transform:none}
 }
+
+/* ---- Lit home: warm light from windows + doorway (dark mode) ---- */
+.win-glow,.door-glow,.door-spill{opacity:0;transition:opacity .6s}
+.house-window,.house-door{transition:fill .5s}
+/* softly lit by default at night */
+html:not(.light) .house-window{fill:#b8923f}
+html:not(.light) .win-candle{fill:#c79b44}
+html:not(.light) .house-door{fill:#9a6c22}
+html:not(.light) .win-glow{opacity:.42}
+html:not(.light) .door-glow{opacity:.5}
+html:not(.light) .door-spill{opacity:.5}
+/* blaze warmer on hover */
+html:not(.light) .promise:hover .house-window{fill:#f4cf78}
+html:not(.light) .promise:hover .win-candle{fill:#f9da8c}
+html:not(.light) .promise:hover .house-door{fill:#f3c878}
+html:not(.light) .promise:hover .win-glow{opacity:.85}
+html:not(.light) .promise:hover .door-glow{opacity:.92}
+html:not(.light) .promise:hover .door-spill{opacity:.95}
