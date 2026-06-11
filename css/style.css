@@ -2270,3 +2270,94 @@ html:not(.light) .promise-scene:hover .scene-hint{opacity:0}
   .scene-stars,.scene-sun,.candle-flame{animation:none!important}
   html.light .scene-sun{opacity:1;transform:none}
 }
+
+/* =====================================================
+   OUR PROMISE v3 — glass box over a living home scene
+   (candle glows by night through the glass · sun shines by day)
+   ===================================================== */
+.promise{position:relative;overflow:hidden;background:var(--m-black);
+  min-height:780px;display:flex;align-items:center;
+  padding:clamp(70px,8vw,110px) 0 clamp(150px,20vh,240px)}
+.promise>.container{position:relative;z-index:2;width:100%}
+
+/* ---- background scene ---- */
+.promise-bg{position:absolute;inset:0;z-index:0;overflow:hidden}
+.pb-sky{position:absolute;inset:0;transition:background 1.1s var(--ease);
+  background:linear-gradient(to bottom, #0a0e1c 0%, #11121e 40%, #1b150d 74%, #281c10 100%)}
+html.light .pb-sky{background:linear-gradient(to bottom, #a6c1de 0%, #d9cab0 44%, #f6daa6 72%, #fceccf 100%)}
+.pb-stars{position:absolute;inset:0;opacity:.6;animation:starTwinkle 4.5s ease-in-out infinite;
+  background-image:
+    radial-gradient(1.5px 1.5px at 14% 18%, rgba(255,255,255,.85), transparent),
+    radial-gradient(1.3px 1.3px at 30% 10%, rgba(255,255,255,.7), transparent),
+    radial-gradient(1.6px 1.6px at 52% 16%, rgba(255,255,255,.6), transparent),
+    radial-gradient(1.3px 1.3px at 72% 9%, rgba(255,255,255,.7), transparent),
+    radial-gradient(1.5px 1.5px at 86% 20%, rgba(255,255,255,.6), transparent),
+    radial-gradient(1.2px 1.2px at 64% 26%, rgba(255,255,255,.55), transparent),
+    radial-gradient(1.2px 1.2px at 8% 30%, rgba(255,255,255,.55), transparent)}
+html.light .pb-stars{opacity:0}
+.pb-moon{position:absolute;top:13%;left:16%;width:56px;height:56px;border-radius:50%;z-index:0;
+  background:radial-gradient(circle at 38% 34%, #f4f2e4, #d7d2be);
+  box-shadow:0 0 38px rgba(240,238,220,.4), inset -7px -5px 0 rgba(0,0,0,.05);transition:opacity .8s,transform .8s}
+html.light .pb-moon{opacity:0;transform:translateY(-26px)}
+.pb-sun{position:absolute;bottom:32%;left:50%;margin-left:-46px;width:92px;height:92px;border-radius:50%;z-index:0;
+  background:radial-gradient(circle, #fff5d6 0%, #f6d27c 52%, #e9ad4c 100%);
+  box-shadow:0 0 80px 22px rgba(244,205,114,.5), 0 0 200px 80px rgba(231,169,72,.3);
+  opacity:0;transform:translateY(96px) scale(.78)}
+html.light .pb-sun{animation:sunRise 3s var(--ease-out) .3s forwards}
+/* warm bloom that shines THROUGH the glass box */
+.pb-bloom{position:absolute;left:50%;top:56%;transform:translate(-50%,-50%);z-index:0;pointer-events:none;
+  width:min(880px,94%);height:560px;border-radius:50%;
+  background:radial-gradient(ellipse at center, rgba(244,196,99,.5), rgba(231,169,72,.18) 45%, transparent 72%);
+  opacity:.3;transition:opacity .7s}
+html:not(.light) .promise:hover .pb-bloom{opacity:.95}
+html.light .pb-bloom{opacity:.9;background:radial-gradient(ellipse at center, rgba(255,216,132,.62), rgba(244,196,99,.26) 45%, transparent 72%)}
+.pb-house{position:absolute;left:50%;bottom:0;transform:translateX(-50%);width:min(540px,62%);height:auto;z-index:1}
+.pb-ground{position:absolute;left:0;right:0;bottom:0;height:14%;z-index:1;
+  background:linear-gradient(to bottom, transparent, #060503 84%)}
+html.light .pb-ground{background:linear-gradient(to bottom, transparent, #c6b187 92%)}
+
+/* candle lights when the section is hovered (night only) */
+html:not(.light) .promise:hover .win-candle{fill:#f4c569}
+html:not(.light) .promise:hover .svg-cglow{opacity:.92}
+html:not(.light) .promise:hover .candle-body{opacity:.9}
+html:not(.light) .promise:hover .candle-flame{opacity:1;animation:candleFlicker 1.5s ease-in-out infinite}
+
+/* ---- enlarged liquid-glass message box ---- */
+.promise-box{position:relative;z-index:2;max-width:760px;margin:0 auto;text-align:center;overflow:hidden;
+  padding:clamp(40px,4.6vw,64px) clamp(28px,4vw,60px);border-radius:24px;
+  background:linear-gradient(160deg, rgba(42,33,21,.5), rgba(20,16,11,.42));
+  backdrop-filter:blur(30px) saturate(180%);-webkit-backdrop-filter:blur(30px) saturate(180%);
+  border:1px solid rgba(203,168,90,.26);
+  box-shadow:0 40px 90px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.16)}
+.promise-box::before{content:'';position:absolute;inset:0;pointer-events:none;border-radius:inherit;z-index:0;
+  background:linear-gradient(135deg, rgba(255,255,255,.15) 0%, rgba(255,255,255,.03) 26%, transparent 48%)}
+.promise-box>*{position:relative;z-index:1}
+html.light .promise-box{background:linear-gradient(160deg, rgba(255,255,255,.6), rgba(255,253,247,.46));
+  border-color:rgba(150,118,46,.24);box-shadow:0 40px 80px rgba(80,62,24,.16), inset 0 1px 0 rgba(255,255,255,.85)}
+
+.promise-box .promise-quote{position:absolute;top:-4px;left:50%;transform:translateX(-50%);z-index:0;
+  font-family:var(--font-serif);font-size:8rem;line-height:1;color:var(--gold);opacity:.12;pointer-events:none}
+.sec-label-center{justify-content:center;margin-bottom:20px}
+.promise-box .promise-text{font-family:var(--font-serif);font-size:clamp(1.5rem,2.6vw,2.5rem);font-weight:400;
+  line-height:1.5;color:var(--w80);max-width:42ch;margin:0 auto 30px}
+.promise-box .promise-text em{font-style:italic;color:var(--gold-2);text-shadow:0 0 30px rgba(203,168,90,.25)}
+.promise-box .promise-sign{justify-content:center;margin-bottom:26px}
+.promise-stats{display:flex;align-items:center;justify-content:center;gap:clamp(18px,2.6vw,42px);flex-wrap:wrap;margin-bottom:28px}
+.pstat{text-align:center}
+.pstat b{font-family:var(--font-serif);font-size:clamp(1.55rem,2.4vw,2.2rem);color:var(--gold-2);font-weight:500}
+.pstat i{font-family:var(--font-serif);font-style:normal;color:var(--gold-dim);font-size:1.1rem;margin-left:1px}
+.pstat span{display:block;font-size:.55rem;letter-spacing:.14em;text-transform:uppercase;color:var(--w40);margin-top:5px;font-weight:600}
+.pstat-div{width:1px;height:36px;background:rgba(255,255,255,.12)}
+html.light .pstat-div{background:rgba(120,95,40,.2)}
+.promise-box .promise-link{justify-content:center}
+
+@media(max-width:600px){
+  .promise{min-height:560px}
+  .promise-box{padding:32px 22px}
+  .promise-stats{gap:14px}
+  .pstat-div{display:none}
+}
+@media(prefers-reduced-motion:reduce){
+  .pb-stars,.pb-sun,.candle-flame{animation:none!important}
+  html.light .pb-sun{opacity:1;transform:none}
+}

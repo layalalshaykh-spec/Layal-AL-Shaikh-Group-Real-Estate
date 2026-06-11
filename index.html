@@ -427,71 +427,55 @@
   </div>
 </section>
 
-<!-- ===== OUR PROMISE — split editorial ===== -->
+<!-- ===== OUR PROMISE — glass box over a living home scene ===== -->
 <section class="promise" id="promise">
-  <div class="promise-glow"></div>
-  <div class="container">
-    <div class="promise-grid">
-      <!-- Home scene: candle by night, sunrise by day -->
-      <div class="promise-scene reveal-fade">
-        <div class="scene-art" aria-hidden="true">
-          <div class="scene-sky"></div>
-          <div class="scene-stars"></div>
-          <div class="scene-sun"></div>
-          <div class="scene-moon"></div>
-          <svg class="scene-house" viewBox="0 0 240 180" preserveAspectRatio="xMidYMax meet">
-            <defs><filter id="candleGlow" x="-120%" y="-120%" width="340%" height="340%"><feGaussianBlur stdDeviation="7"/></filter></defs>
-            <polygon class="house-roof" points="56,90 120,40 184,90"/>
-            <rect class="house-body" x="74" y="88" width="92" height="74"/>
-            <rect class="house-chimney" x="150" y="56" width="12" height="22"/>
-            <circle class="svg-cglow" cx="95" cy="112" r="24" fill="#f4c163" filter="url(#candleGlow)"/>
-            <rect class="house-door" x="108" y="124" width="24" height="38" rx="1"/>
-            <rect class="house-window win-candle" x="84" y="101" width="22" height="22" rx="1"/>
-            <rect class="house-window" x="134" y="101" width="22" height="22" rx="1"/>
-            <rect class="candle-body" x="92" y="107" width="4" height="12"/>
-            <ellipse class="candle-flame" cx="94" cy="104" rx="2.4" ry="4.4"/>
-          </svg>
-          <div class="scene-ground"></div>
-        </div>
-        <div class="scene-hint">
-          <span class="scene-hint-dark">Hover to light the candle</span>
-          <span class="scene-hint-light">Sunrise over your home</span>
-        </div>
-        <div class="promise-badge">
-          <div class="pb-stat"><div class="pb-num"><b data-count="20">0</b></div><span>Years Trusted</span></div>
-          <div class="pb-div"></div>
-          <div class="pb-stat"><div class="pb-num"><b data-count="1200">0</b>+</div><span>Families Housed</span></div>
-        </div>
-      </div>
+  <!-- Background scene: candle glows by night, sun shines by day -->
+  <div class="promise-bg" aria-hidden="true">
+    <div class="pb-sky"></div>
+    <div class="pb-stars"></div>
+    <div class="pb-moon"></div>
+    <div class="pb-sun"></div>
+    <div class="pb-bloom"></div>
+    <svg class="pb-house" viewBox="0 0 320 200" preserveAspectRatio="xMidYMax meet">
+      <defs><filter id="candleGlow" x="-150%" y="-150%" width="400%" height="400%"><feGaussianBlur stdDeviation="9"/></filter></defs>
+      <polygon class="house-roof" points="96,98 160,48 224,98"/>
+      <rect class="house-body" x="114" y="96" width="92" height="80"/>
+      <rect class="house-chimney" x="190" y="64" width="12" height="24"/>
+      <circle class="svg-cglow" cx="135" cy="122" r="26" fill="#f4c163" filter="url(#candleGlow)"/>
+      <rect class="house-door" x="148" y="138" width="24" height="38" rx="1"/>
+      <rect class="house-window win-candle" x="124" y="109" width="22" height="22" rx="1"/>
+      <rect class="house-window" x="174" y="109" width="22" height="22" rx="1"/>
+      <rect class="candle-body" x="132" y="115" width="4" height="12"/>
+      <ellipse class="candle-flame" cx="134" cy="112" rx="2.6" ry="4.6"/>
+    </svg>
+    <div class="pb-ground"></div>
+  </div>
 
-      <!-- Promise -->
-      <div class="promise-content reveal-fade">
-        <!-- animated gold light-orbs (blurred behind the glass) -->
-        <div class="promise-orbs" aria-hidden="true">
-          <span class="porb porb1"></span>
-          <span class="porb porb2"></span>
-          <span class="porb porb3"></span>
-          <span class="porb porb4"></span>
-        </div>
-        <!-- liquid glass panel -->
-        <div class="promise-glass">
-          <span class="promise-quote" aria-hidden="true">&ldquo;</span>
-          <div class="sec-label"><div class="sec-line"></div><span>Our Promise</span></div>
-          <p class="promise-text">A home is more than walls and a roof. It's where you feel
-            <em>safe</em>, where your family <em>grows</em>, and where your story
-            <em>belongs</em>. For twenty years, we've helped Qatar's families find exactly that.</p>
-          <div class="promise-sign">
-            <div class="ps-avatar">LA</div>
-            <div class="ps-meta">
-              <span class="ps-name">Layal Alshaikh</span>
-              <span class="ps-role">Founder · Your Guide Home</span>
-            </div>
-          </div>
-          <a href="about.html" class="promise-link">Read our story
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-          </a>
+  <div class="container">
+    <div class="promise-box reveal-fade">
+      <span class="promise-quote" aria-hidden="true">&ldquo;</span>
+      <div class="sec-label sec-label-center"><span>Our Promise</span></div>
+      <p class="promise-text">A home is more than walls and a roof. It's where you feel
+        <em>safe</em>, where your family <em>grows</em>, and where your story
+        <em>belongs</em>. For twenty years, we've helped Qatar's families find exactly that —
+        and we'll do the same for you.</p>
+      <div class="promise-sign">
+        <div class="ps-avatar">LA</div>
+        <div class="ps-meta">
+          <span class="ps-name">Layal Alshaikh</span>
+          <span class="ps-role">Founder · Your Guide Home</span>
         </div>
       </div>
+      <div class="promise-stats">
+        <div class="pstat"><b data-count="20">0</b><span>Years Trusted</span></div>
+        <div class="pstat-div"></div>
+        <div class="pstat"><b data-count="1200">0</b><i>+</i><span>Families Housed</span></div>
+        <div class="pstat-div"></div>
+        <div class="pstat"><b data-count="98">0</b><i>%</i><span>Satisfaction</span></div>
+      </div>
+      <a href="about.html" class="promise-link">Read our story
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
     </div>
   </div>
 </section>
