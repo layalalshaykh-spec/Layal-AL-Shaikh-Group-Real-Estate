@@ -2276,8 +2276,8 @@ html:not(.light) .promise-scene:hover .scene-hint{opacity:0}
    (candle glows by night through the glass · sun shines by day)
    ===================================================== */
 .promise{position:relative;overflow:hidden;background:var(--m-black);
-  min-height:780px;display:flex;align-items:center;
-  padding:clamp(70px,8vw,110px) 0 clamp(150px,20vh,240px)}
+  min-height:880px;display:flex;align-items:flex-start;
+  padding:clamp(60px,7vw,96px) 0 0}
 .promise>.container{position:relative;z-index:2;width:100%}
 
 /* ---- background scene ---- */
@@ -2311,7 +2311,7 @@ html.light .pb-sun{animation:sunRise 3s var(--ease-out) .3s forwards}
   opacity:.3;transition:opacity .7s}
 html:not(.light) .promise:hover .pb-bloom{opacity:.95}
 html.light .pb-bloom{opacity:.9;background:radial-gradient(ellipse at center, rgba(255,216,132,.62), rgba(244,196,99,.26) 45%, transparent 72%)}
-.pb-house{position:absolute;left:50%;bottom:0;transform:translateX(-50%);width:min(540px,62%);height:auto;z-index:1}
+.pb-house{position:absolute;left:0;right:0;bottom:0;width:100%;height:70%;z-index:1;display:block;touch-action:none}
 .pb-ground{position:absolute;left:0;right:0;bottom:0;height:14%;z-index:1;
   background:linear-gradient(to bottom, transparent, #060503 84%)}
 html.light .pb-ground{background:linear-gradient(to bottom, transparent, #c6b187 92%)}

@@ -437,30 +437,7 @@
     <div class="pb-sun"></div>
     <div class="pb-bloom"></div>
     <div class="pb-ground"></div>
-    <svg class="pb-house" viewBox="0 0 320 200" preserveAspectRatio="xMidYMax meet">
-      <defs>
-        <filter id="oGlow" x="-160%" y="-160%" width="420%" height="420%"><feGaussianBlur stdDeviation="8"/></filter>
-        <linearGradient id="doorSpill" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stop-color="#f6cd80" stop-opacity=".82"/>
-          <stop offset="1" stop-color="#f6cd80" stop-opacity="0"/>
-        </linearGradient>
-      </defs>
-      <!-- warm light spilling from the doorway onto the ground -->
-      <polygon class="door-spill" points="147,176 173,176 202,200 118,200" fill="url(#doorSpill)" filter="url(#oGlow)"/>
-      <polygon class="house-roof" points="96,98 160,48 224,98"/>
-      <rect class="house-body" x="114" y="96" width="92" height="80"/>
-      <rect class="house-chimney" x="190" y="64" width="12" height="24"/>
-      <!-- soft glows behind the openings -->
-      <circle class="win-glow" cx="135" cy="120" r="22" fill="#f4c163" filter="url(#oGlow)"/>
-      <circle class="win-glow" cx="185" cy="120" r="20" fill="#f4c163" filter="url(#oGlow)"/>
-      <circle class="door-glow" cx="160" cy="155" r="20" fill="#f6cd80" filter="url(#oGlow)"/>
-      <!-- door + windows (light from inside) -->
-      <rect class="house-door" x="148" y="138" width="24" height="38" rx="1"/>
-      <rect class="house-window win-candle" x="124" y="109" width="22" height="22" rx="1"/>
-      <rect class="house-window" x="174" y="109" width="22" height="22" rx="1"/>
-      <rect class="candle-body" x="132" y="115" width="4" height="12"/>
-      <ellipse class="candle-flame" cx="134" cy="112" rx="2.6" ry="4.6"/>
-    </svg>
+    <canvas class="pb-house" id="promiseHouse"></canvas>
   </div>
 
   <div class="container">
@@ -1306,6 +1283,7 @@
 <script src="js/theme.js"></script>
 <script src="js/cursor.js"></script>
 <script type="module" src="js/house3d.js"></script>
+<script type="module" src="js/promise-house.js"></script>
 <script type="module" src="js/motion.js"></script>
 </body>
 </html>
