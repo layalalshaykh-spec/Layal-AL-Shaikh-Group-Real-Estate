@@ -355,3 +355,55 @@ document.querySelectorAll('.hl-cat').forEach(c => c.addEventListener('click', ()
   document.querySelectorAll('.hl-cat').forEach(x => x.classList.remove('active'));
   c.classList.add('active');
 }));
+
+// ---- SIGNATURE RESIDENCE switcher ----
+(function () {
+  const stage = document.querySelector('.sig-stage');
+  if (!stage) return;
+  const data = [
+    { img: 'https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=1100&q=82',
+      alt: 'Royal Residence, Porto Arabia — waterfront villa at dusk',
+      type: 'Luxury Villa', name: 'Royal Residence, Porto Arabia', price: 'QAR 12,500,000',
+      loc: 'Porto Arabia · The Pearl',
+      desc: 'A six-bedroom waterfront masterpiece with private beach access, an infinity pool and uninterrupted views across the marina.',
+      specs: ['6 Beds', '7 Baths', '850 m²', 'Sea View'], tags: ['Freehold', '0% Tax', 'Move-in Ready'] },
+    { img: 'https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?auto=format&fit=crop&w=1100&q=82',
+      alt: 'Marina Sky Penthouse, Lusail — terrace with skyline view',
+      type: 'Sky Penthouse', name: 'Marina Sky Penthouse', price: 'QAR 7,200,000',
+      loc: 'Marina District · Lusail',
+      desc: 'A full-floor penthouse above Lusail Marina with floor-to-ceiling glass, a private lift and a wraparound terrace.',
+      specs: ['4 Beds', '5 Baths', '480 m²', 'Skyline'], tags: ['Freehold', 'Smart Home', 'New'] },
+    { img: 'https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=1100&q=82',
+      alt: 'Katara Hills Estate, Lusail — modern villa with garden',
+      type: 'Signature Villa', name: 'Katara Hills Estate', price: 'QAR 9,500,000',
+      loc: 'Katara Hills · Lusail',
+      desc: 'A five-bedroom family estate overlooking the championship golf course, with a private pool and landscaped gardens.',
+      specs: ['5 Beds', '6 Baths', '650 m²', 'Golf View'], tags: ['Freehold', 'Private Pool', 'Garden'] }
+  ];
+  const $ = (id) => document.getElementById(id);
+  const photo = $('sigPhoto'), specsEl = $('sigSpecs'), tagsEl = $('sigTags');
+  const thumbs = [...document.querySelectorAll('.sig-thumb')];
+  // preserve the 4 spec SVG icons (beds/baths/area/view) for re-render
+  const icons = [...specsEl.querySelectorAll('svg')].map(s => s.outerHTML);
+
+  function render(i) {
+    const d = data[i];
+    stage.classList.add('switching');
+    setTimeout(() => {
+      photo.src = d.img; photo.alt = d.alt;
+      $('sigType').textContent = d.type;
+      $('sigName').textContent = d.name;
+      $('sigPrice').textContent = d.price;
+      $('sigLoc').textContent = d.loc;
+      $('sigDesc').textContent = d.desc;
+      $('sigIndex').textContent = String(i + 1).padStart(2, '0');
+      specsEl.innerHTML = d.specs.map((s, k) => `<li>${icons[k] || ''}<span>${s}</span></li>`).join('');
+      tagsEl.innerHTML = d.tags.map(t => `<span>${t}</span>`).join('');
+      stage.classList.remove('switching');
+    }, 300);
+    thumbs.forEach((t, k) => { t.classList.toggle('active', k === i); t.setAttribute('aria-selected', k === i); });
+  }
+  thumbs.forEach(t => t.addEventListener('click', () => render(+t.dataset.i)));
+  const tour = $('sigTour');
+  if (tour) tour.addEventListener('click', () => { window.location.href = 'gallery.html'; });
+})();

@@ -1992,3 +1992,120 @@ html.cursor-hover .hc-body{fill:var(--gold);stroke:var(--gold-3)}
 html.cursor-hover .hc-door,html.cursor-hover .hc-win{fill:#fff6df}
 html.cursor-hover .hcursor-house svg{filter:drop-shadow(0 0 8px rgba(203,168,90,.7))}
 html.cursor-hover .hcursor-glow{background:radial-gradient(circle, rgba(203,168,90,.5) 0%, rgba(203,168,90,.16) 45%, transparent 72%)}
+
+/* =====================================================
+   SIGNATURE RESIDENCE — featured showcase
+   ===================================================== */
+.signature{position:relative;overflow:hidden;background:var(--m-black-2);padding:clamp(70px,9vw,120px) 0}
+.sig-glow{position:absolute;top:8%;right:-6%;width:50vw;height:60vh;pointer-events:none;z-index:0;
+  background:radial-gradient(ellipse at center, rgba(203,168,90,.08), transparent 65%)}
+.signature .container{position:relative;z-index:1}
+.sig-head{margin-bottom:clamp(36px,5vw,58px)}
+
+.sig-stage{
+  position:relative;display:grid;
+  grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);
+  align-items:center
+}
+
+/* ---- Visual ---- */
+.sig-visual{position:relative;border-radius:18px;overflow:hidden;z-index:1;aspect-ratio:16/11;
+  box-shadow:0 30px 70px rgba(0,0,0,.5)}
+.sig-photo{width:100%;height:100%;object-fit:cover;display:block;
+  filter:brightness(.84) saturate(1.06) contrast(1.02) sepia(.08);
+  transition:transform .8s var(--ease), filter .8s var(--ease), opacity .35s}
+.sig-visual:hover .sig-photo{transform:scale(1.04);filter:brightness(1) saturate(1.16) sepia(.04)}
+.sig-photo-veil{position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(to top, rgba(14,11,7,.72), transparent 46%),
+            linear-gradient(to bottom, rgba(14,11,7,.42), transparent 34%)}
+.sig-badge{position:absolute;top:16px;left:16px;z-index:2;
+  font-size:.58rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-3);
+  padding:7px 13px;border-radius:100px;
+  background:rgba(22,18,12,.5);border:1px solid rgba(203,168,90,.4);
+  backdrop-filter:blur(14px) saturate(150%);-webkit-backdrop-filter:blur(14px) saturate(150%)}
+.sig-tour{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:2;cursor:pointer;
+  display:inline-flex;align-items:center;gap:10px;padding:9px 20px 9px 9px;border-radius:100px;color:#fff;
+  font-size:.66rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  background:rgba(22,18,12,.3);border:1px solid rgba(255,255,255,.28);
+  backdrop-filter:blur(16px) saturate(150%);-webkit-backdrop-filter:blur(16px) saturate(150%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.4);transition:background var(--t2),transform var(--t2)}
+.sig-tour-ico{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  background:var(--gold);color:var(--m-black);flex-shrink:0;padding-left:2px}
+.sig-tour:hover{background:rgba(203,168,90,.24);transform:translate(-50%,-50%) scale(1.05)}
+.sig-loc{position:absolute;left:16px;bottom:16px;z-index:2;display:flex;align-items:center;gap:6px;
+  font-size:.66rem;font-weight:600;letter-spacing:.06em;color:rgba(255,255,255,.88);text-shadow:0 1px 6px rgba(0,0,0,.6)}
+.sig-loc svg{color:var(--gold-2);flex-shrink:0}
+
+/* ---- Glass panel (overlaps the visual) ---- */
+.sig-panel{position:relative;z-index:3;
+  margin-left:clamp(-120px,-7vw,-48px);
+  padding:clamp(28px,2.6vw,40px);border-radius:18px;
+  background:linear-gradient(160deg, rgba(38,30,20,.74), rgba(22,18,12,.68));
+  border:1px solid rgba(203,168,90,.2);
+  backdrop-filter:blur(22px) saturate(150%);-webkit-backdrop-filter:blur(22px) saturate(150%);
+  box-shadow:0 30px 70px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.1)}
+.sig-meta{display:flex;align-items:center;gap:14px;margin-bottom:14px}
+.sig-index{font-size:.72rem;color:var(--w40);letter-spacing:.08em}
+.sig-index b{font-family:var(--font-serif);font-size:1.1rem;color:var(--gold-2);font-weight:500}
+.sig-type{font-size:.6rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);
+  padding-left:14px;border-left:1px solid var(--w15)}
+.sig-name{font-family:var(--font-serif);font-size:clamp(1.6rem,2.4vw,2.4rem);font-weight:400;line-height:1.1;
+  color:var(--w90);margin-bottom:10px;transition:opacity .35s}
+.sig-price{font-family:var(--font-serif);font-size:clamp(1.4rem,2vw,2rem);color:var(--gold-2);margin-bottom:16px;transition:opacity .35s}
+.sig-desc{font-size:.9rem;line-height:1.7;color:var(--w50);max-width:46ch;margin-bottom:22px;transition:opacity .35s}
+.sig-specs{display:flex;flex-wrap:wrap;gap:12px 24px;margin-bottom:20px;
+  padding:16px 0;border-top:1px solid var(--w06);border-bottom:1px solid var(--w06)}
+.sig-specs li{display:flex;align-items:center;gap:8px;font-size:.8rem;color:var(--w70);font-weight:500}
+.sig-specs svg{color:var(--gold);opacity:.85;flex-shrink:0}
+.sig-tags{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px}
+.sig-tags span{font-size:.6rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--gold-3);
+  padding:5px 12px;border-radius:100px;background:rgba(203,168,90,.08);border:1px solid rgba(203,168,90,.2)}
+.sig-actions{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:26px}
+.sig-cta{display:inline-flex;align-items:center;gap:9px;padding:13px 26px;border-radius:100px;cursor:pointer;
+  font-size:.7rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;transition:all var(--t2)}
+.sig-cta.gold{background:var(--gold);color:#1c1408;box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 8px 24px rgba(203,168,90,.35)}
+.sig-cta.gold:hover{background:var(--gold-2);transform:translateY(-2px);box-shadow:0 12px 32px rgba(203,168,90,.5)}
+.sig-cta.gold svg{transition:transform var(--t1)}
+.sig-cta.gold:hover svg{transform:translateX(3px)}
+.sig-cta.ghost{color:var(--w80);border:1px solid var(--w15);background:rgba(255,255,255,.03);
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.sig-cta.ghost:hover{border-color:var(--gold);color:var(--gold-3);background:rgba(203,168,90,.06)}
+.sig-thumbs{display:flex;gap:10px}
+.sig-thumb{width:64px;height:48px;border-radius:10px;cursor:pointer;flex-shrink:0;padding:0;
+  background-size:cover;background-position:center;border:2px solid transparent;opacity:.55;transition:all var(--t2)}
+.sig-thumb:hover{opacity:.85}
+.sig-thumb.active{opacity:1;border-color:var(--gold);box-shadow:0 6px 18px rgba(203,168,90,.3)}
+
+/* switching fade */
+.sig-stage.switching .sig-photo,
+.sig-stage.switching .sig-name,
+.sig-stage.switching .sig-price,
+.sig-stage.switching .sig-desc{opacity:.2}
+
+/* focus-visible (a11y) */
+.sig-tour:focus-visible,.sig-cta:focus-visible,.sig-thumb:focus-visible{outline:2px solid var(--gold-2);outline-offset:3px}
+
+/* responsive */
+@media(max-width:900px){
+  .sig-stage{grid-template-columns:1fr}
+  .sig-visual{aspect-ratio:16/10}
+  .sig-panel{margin:-50px clamp(14px,4vw,40px) 0}
+}
+@media(max-width:560px){
+  .sig-panel{margin:-40px 12px 0;padding:24px 20px}
+  .sig-actions{flex-direction:column}
+  .sig-cta{justify-content:center}
+  .sig-specs{gap:10px 18px}
+}
+
+/* light mode */
+html.light .sig-panel{
+  background:linear-gradient(160deg, rgba(255,255,255,.88), rgba(255,253,247,.8));
+  border-color:rgba(150,118,46,.22);
+  box-shadow:0 30px 60px rgba(80,62,24,.14), inset 0 1px 0 rgba(255,255,255,.85)}
+html.light .sig-cta.ghost{background:rgba(255,255,255,.5)}
+html.light .sig-tags span{background:rgba(190,151,64,.12)}
+
+@media(prefers-reduced-motion:reduce){
+  .sig-photo,.sig-visual:hover .sig-photo{transition:opacity .35s;transform:none}
+}
