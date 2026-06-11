@@ -2156,6 +2156,43 @@ html.light .sig-tags span{background:rgba(190,151,64,.12)}
 @media(max-width:880px){
   .promise-grid{grid-template-columns:1fr;gap:0}
   .promise-visual{aspect-ratio:16/10;margin-bottom:34px}
-  .promise-quote{display:none}
 }
 @media(prefers-reduced-motion:reduce){.promise-visual:hover img{transform:none}}
+
+/* ---- Animated gold orbs behind the words + liquid glass panel ---- */
+.promise-content{position:relative;isolation:isolate}
+.promise-orbs{position:absolute;inset:0;z-index:0;pointer-events:none;border-radius:18px;overflow:hidden}
+.porb{position:absolute;border-radius:50%;filter:blur(26px);will-change:transform}
+.porb1{width:180px;height:180px;top:-6%;left:3%;background:radial-gradient(circle, rgba(228,184,100,.75), transparent 70%);animation:porb1 15s ease-in-out infinite}
+.porb2{width:142px;height:142px;top:44%;left:58%;background:radial-gradient(circle, rgba(201,168,76,.6), transparent 70%);animation:porb2 19s ease-in-out infinite}
+.porb3{width:122px;height:122px;top:62%;left:12%;background:radial-gradient(circle, rgba(240,204,114,.58), transparent 70%);animation:porb3 13s ease-in-out infinite}
+.porb4{width:98px;height:98px;top:12%;left:74%;background:radial-gradient(circle, rgba(176,134,66,.55), transparent 70%);animation:porb4 21s ease-in-out infinite}
+@keyframes porb1{0%,100%{transform:translate(0,0)}50%{transform:translate(56px,48px)}}
+@keyframes porb2{0%,100%{transform:translate(0,0)}50%{transform:translate(-46px,36px)}}
+@keyframes porb3{0%,100%{transform:translate(0,0)}50%{transform:translate(38px,-44px)}}
+@keyframes porb4{0%,100%{transform:translate(0,0)}50%{transform:translate(-36px,-32px)}}
+
+.promise-glass{
+  position:relative;z-index:1;overflow:hidden;border-radius:18px;
+  padding:clamp(30px,3vw,46px);
+  background:linear-gradient(160deg, rgba(46,37,23,.42), rgba(20,16,11,.36));
+  backdrop-filter:blur(28px) saturate(180%);-webkit-backdrop-filter:blur(28px) saturate(180%);
+  border:1px solid rgba(203,168,90,.26);
+  box-shadow:0 26px 64px rgba(0,0,0,.42), inset 0 1px 0 rgba(255,255,255,.16)
+}
+.promise-glass::before{content:'';position:absolute;inset:0;pointer-events:none;z-index:0;border-radius:inherit;
+  background:linear-gradient(135deg, rgba(255,255,255,.16) 0%, rgba(255,255,255,.03) 24%, transparent 46%)}
+/* quote sits inside the glass, behind the text */
+.promise-glass .promise-quote{position:absolute;top:-16px;left:16px;z-index:0}
+.promise-glass .sec-label,
+.promise-glass .promise-text,
+.promise-glass .promise-sign,
+.promise-glass .promise-link{position:relative;z-index:1}
+
+/* light-mode glass */
+html.light .promise-glass{
+  background:linear-gradient(160deg, rgba(255,255,255,.62), rgba(255,253,247,.46));
+  border-color:rgba(150,118,46,.24);
+  box-shadow:0 26px 56px rgba(80,62,24,.14), inset 0 1px 0 rgba(255,255,255,.85)
+}
+@media(prefers-reduced-motion:reduce){.porb{animation:none}}
