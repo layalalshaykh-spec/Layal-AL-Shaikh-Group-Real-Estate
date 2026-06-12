@@ -2518,3 +2518,43 @@ html.light .pr-media img,html.light .gal-item img,html.light .about-img-main,htm
 .pb-house-day{display:none}
 html.light .pb-house-night{display:none}
 html.light .pb-house-day{display:block}
+
+/* =====================================================
+   NIGHT — hover a room to turn the lights on
+   (only in dark mode; daytime rooms are already lit)
+   ===================================================== */
+/* photo-rooms: the lamps warm up + a glow swells when you enter */
+html:not(.light) .ptypes-section:hover::before,
+html:not(.light) .popres:hover::before,
+html:not(.light) .insights-section:hover::before,
+html:not(.light) .services-section:hover::before,
+html:not(.light) .testi-section:hover::before,
+html:not(.light) .contact-section:hover::before{
+  filter:brightness(.54) saturate(.88) contrast(1.04) sepia(.18)}
+html:not(.light) .ptypes-section:hover::after,
+html:not(.light) .popres:hover::after,
+html:not(.light) .insights-section:hover::after,
+html:not(.light) .services-section:hover::after,
+html:not(.light) .testi-section:hover::after,
+html:not(.light) .contact-section:hover::after{
+  background:linear-gradient(rgba(14,11,7,.7),rgba(20,15,9,.62)),
+            radial-gradient(76% 66% at 50% 40%, rgba(255,176,84,.34), transparent 60%)}
+
+/* glass-rooms: warm interior light fills the room on hover */
+.signature,.prop-section,.neighborhoods-section,.about-section,.cta-section{
+  transition:box-shadow .7s var(--ease)}
+html:not(.light) .signature:hover,
+html:not(.light) .prop-section:hover,
+html:not(.light) .neighborhoods-section:hover,
+html:not(.light) .about-section:hover{
+  box-shadow:inset 0 1px 0 rgba(203,168,90,.34),
+             inset 0 -60px 180px rgba(214,150,70,.13),
+             inset 0 0 130px rgba(214,150,70,.06)}
+
+/* a soft warm halo on cards when their room is lit (night) */
+html:not(.light) .ptype-card,html:not(.light) .ins-card,html:not(.light) .care-item,
+html:not(.light) .pr-card,html:not(.light) .pcard,html:not(.light) .hood-card,html:not(.light) .tcard{
+  transition:box-shadow var(--t2),transform var(--t2),border-color var(--t2),background var(--t2)}
+html:not(.light) .ptype-card:hover,html:not(.light) .ins-card:hover,
+html:not(.light) .care-item:hover,html:not(.light) .pr-card:hover,html:not(.light) .tcard:hover{
+  box-shadow:0 22px 54px rgba(0,0,0,.4), 0 0 60px rgba(214,150,70,.18), inset 0 1px 0 rgba(255,255,255,.14)}
