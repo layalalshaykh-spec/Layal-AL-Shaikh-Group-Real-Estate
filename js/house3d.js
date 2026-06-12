@@ -4,15 +4,30 @@
    Idle = black & white, lights off.
    Hover = full colour, warm interior lights ON.
    ===================================================== */
-import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js';
-
 (function () {
   const canvas = document.getElementById('house3d');
   if (!canvas) return;
 
-  let renderer;
-  try { renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true }); }
-  catch (e) { return; }
+  // ---- Lazy-load Three.js ONLY when light mode is active ----
+  // Dark mode is the default, so most visits never need the 3D engine.
+  // This keeps ~150KB of Three.js (+ scene construction) off the critical path.
+  let started = false;
+  const mo = new MutationObserver(maybeStart);
+  function maybeStart() {
+    if (started || !document.documentElement.classList.contains('light')) return;
+    started = true;
+    mo.disconnect();
+    import('https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js')
+      .then((THREE) => init(THREE))
+      .catch(() => {});
+  }
+  mo.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+  maybeStart(); // run now if the page loaded already in light mode
+
+  function init(THREE) {
+    let renderer;
+    try { renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true }); }
+    catch (e) { return; }
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
@@ -227,4 +242,5 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
     renderer.render(scene, camera);
   }
   loop();
+  } // end init()
 })();
