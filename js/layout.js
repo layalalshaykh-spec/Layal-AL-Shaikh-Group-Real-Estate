@@ -131,14 +131,21 @@
   const hamburger = document.getElementById('hamburger');
   const navMenu = document.getElementById('navLinks');
   if (hamburger && navMenu) {
-    hamburger.addEventListener('click', () => {
-      hamburger.classList.toggle('open');
-      navMenu.classList.toggle('open');
+    const navbarEl = document.getElementById('navbar') || document.querySelector('.navbar');
+    const setMenu = (open) => {
+      hamburger.classList.toggle('open', open);
+      navMenu.classList.toggle('open', open);
+      document.body.classList.toggle('nav-open', open);   // scroll-lock + scrim
+    };
+    hamburger.addEventListener('click', (e) => {
+      e.stopPropagation();
+      setMenu(!navMenu.classList.contains('open'));
     });
-    navMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
-      hamburger.classList.remove('open');
-      navMenu.classList.remove('open');
-    }));
+    navMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => setMenu(false)));
+    document.addEventListener('click', (e) => {            // tap the scrim / outside = close
+      if (navMenu.classList.contains('open') && navbarEl && !navbarEl.contains(e.target)) setMenu(false);
+    });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') setMenu(false); });
   }
 
   // ---- Reveal on scroll ----

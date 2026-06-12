@@ -1628,17 +1628,32 @@ blockquote{
 @media(max-width:768px){
   .navbar{
     left:12px;right:12px;width:auto;transform:none;
-    overflow:visible;border-radius:16px
+    overflow:visible;border-radius:16px;
+    /* CRITICAL: backdrop-filter establishes a containing block that traps the
+       position:fixed mobile drawer INSIDE the pill (so it can't anchor to the
+       viewport). Drop it on mobile; a solid bg compensates for the lost blur. */
+    backdrop-filter:none;-webkit-backdrop-filter:none;
+    background:rgba(20,15,10,.94)
   }
+  .navbar.scrolled{background:rgba(13,9,6,.97)}
   .navbar::before{border-radius:16px}
   .nav-links{
-    background:rgba(22,17,11,.97);
-    backdrop-filter:blur(22px) saturate(150%);-webkit-backdrop-filter:blur(22px) saturate(150%);
-    border-left:1px solid rgba(203,168,90,.18)
+    background:linear-gradient(180deg, rgba(28,21,13,.99), rgba(17,12,8,.995));
+    backdrop-filter:blur(20px) saturate(150%);-webkit-backdrop-filter:blur(20px) saturate(150%);
+    border-left:1px solid rgba(203,168,90,.22);
+    box-shadow:-26px 0 70px rgba(0,0,0,.55)
   }
-  /* make sure the hamburger sits above the sheen and is tappable */
+  /* hamburger stays tappable above the drawer (to close) */
   .hamburger{position:relative;z-index:3}
+  /* dim scrim behind the drawer — tap outside the drawer to close, page can't scroll */
+  body.nav-open{overflow:hidden}
+  body.nav-open::after{
+    content:'';position:fixed;inset:0;z-index:998;
+    background:rgba(8,6,3,.5);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);
+    animation:navScrimIn .3s ease
+  }
 }
+@keyframes navScrimIn{from{opacity:0}to{opacity:1}}
 
 /* =====================================================
    HERO GLASS SEARCH (centered)
@@ -1860,6 +1875,15 @@ html.light .navbar{
 html.light .navbar::before{background:linear-gradient(to bottom, rgba(255,255,255,.6), transparent 50%)}
 html.light .navbar.scrolled{background:rgba(255,255,255,.76)}
 html.light .logo-mark{border-color:var(--gold);color:var(--gold)}
+/* Light navbar → solid on mobile (blur is dropped there so the drawer isn't trapped) */
+@media(max-width:768px){
+  html.light .navbar{background:rgba(255,250,244,.96)}
+  html.light .navbar.scrolled{background:rgba(255,250,244,.98)}
+  html.light .nav-links{
+    background:linear-gradient(180deg, rgba(255,251,245,.99), rgba(247,240,229,.995));
+    border-left-color:rgba(160,124,40,.28)
+  }
+}
 
 /* Glass cards → white on light */
 html.light .ptype-card,html.light .ins-card,html.light .af-item,

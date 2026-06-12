@@ -80,22 +80,20 @@ window.addEventListener('scroll', () => {
 // ---- HAMBURGER ----
 const hamburger = document.getElementById('hamburger');
 const navLinks  = document.getElementById('navLinks');
-hamburger.addEventListener('click', () => {
-  hamburger.classList.toggle('open');
-  navLinks.classList.toggle('open');
+const setMenu = (open) => {
+  hamburger.classList.toggle('open', open);
+  navLinks.classList.toggle('open', open);
+  document.body.classList.toggle('nav-open', open);     // scroll-lock + scrim
+};
+hamburger.addEventListener('click', (e) => {
+  e.stopPropagation();
+  setMenu(!navLinks.classList.contains('open'));
 });
-navLinks.querySelectorAll('a').forEach(a => {
-  a.addEventListener('click', () => {
-    hamburger.classList.remove('open');
-    navLinks.classList.remove('open');
-  });
+navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => setMenu(false)));
+document.addEventListener('click', (e) => {                // tap the scrim / outside = close
+  if (navLinks.classList.contains('open') && !navbar.contains(e.target)) setMenu(false);
 });
-document.addEventListener('click', (e) => {
-  if (!navbar.contains(e.target)) {
-    hamburger.classList.remove('open');
-    navLinks.classList.remove('open');
-  }
-});
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') setMenu(false); });
 
 // ---- SMOOTH SCROLL ----
 document.querySelectorAll('a[href^="#"]').forEach(a => {
