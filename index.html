@@ -64,13 +64,15 @@
 </head>
 <body>
 
-<!-- PRELOADER -->
-<div class="preloader" id="preloader">
-  <div class="preloader-inner">
-    <div class="preloader-logo">
-      <span class="pl-name">LAYAL <span>ALSHAIKH</span></span>
-      <span class="pl-sub">GROUP · QATAR</span>
-    </div>
+<!-- FRONT-DOOR INTRO (preloader) -->
+<div class="preloader door-intro" id="preloader">
+  <div class="door-leaf door-left" aria-hidden="true"><div class="door-panel"></div></div>
+  <div class="door-leaf door-right" aria-hidden="true"><div class="door-panel"></div></div>
+  <div class="door-seam" aria-hidden="true"></div>
+  <div class="door-center">
+    <div class="door-emblem">LA</div>
+    <span class="pl-name">LAYAL <span>ALSHAIKH</span></span>
+    <span class="pl-sub">— Welcome Home —</span>
     <div class="preloader-bar"><div class="preloader-fill" id="preloaderFill"></div></div>
   </div>
 </div>
@@ -435,32 +437,28 @@
     <div class="pb-stars"></div>
     <div class="pb-moon"></div>
     <div class="pb-sun"></div>
-    <div class="pb-bloom"></div>
-    <div class="pb-ground"></div>
-    <canvas class="pb-house" id="promiseHouse"></canvas>
+    <img class="pb-house pb-house-night" src="assets/villa-blender.png" alt="A modern Qatar villa glowing warm at dusk" loading="lazy" decoding="async">
+    <img class="pb-house pb-house-day" src="assets/villa-blender-day.png" alt="A modern Qatar villa in warm morning sun" loading="lazy" decoding="async">
   </div>
 
-  <div class="container">
-    <div class="promise-box reveal-fade">
-      <span class="promise-quote" aria-hidden="true">&ldquo;</span>
-      <div class="sec-label sec-label-center"><span>Our Promise</span></div>
-      <p class="promise-text">A home is more than walls and a roof. It's where you feel
-        <em>safe</em>, where your family <em>grows</em>, and where your story
-        <em>belongs</em>. For twenty years, we've helped Qatar's families find exactly that —
-        and we'll do the same for you.</p>
+  <div class="promise-caption reveal-fade">
+    <div class="sec-label"><div class="sec-line"></div><span>Our Promise</span></div>
+    <p class="promise-text">A home is more than walls and a roof — it's where you feel
+      <em>safe</em>, where your family <em>grows</em>, and where your story <em>belongs</em>.</p>
+    <div class="promise-stats">
+      <div class="pstat"><b data-count="20">0</b><span>Years</span></div>
+      <div class="pstat-div"></div>
+      <div class="pstat"><b data-count="1200">0</b><i>+</i><span>Families</span></div>
+      <div class="pstat-div"></div>
+      <div class="pstat"><b data-count="98">0</b><i>%</i><span>Satisfaction</span></div>
+    </div>
+    <div class="promise-foot">
       <div class="promise-sign">
         <div class="ps-avatar">LA</div>
         <div class="ps-meta">
           <span class="ps-name">Layal Alshaikh</span>
           <span class="ps-role">Founder · Your Guide Home</span>
         </div>
-      </div>
-      <div class="promise-stats">
-        <div class="pstat"><b data-count="20">0</b><span>Years Trusted</span></div>
-        <div class="pstat-div"></div>
-        <div class="pstat"><b data-count="1200">0</b><i>+</i><span>Families Housed</span></div>
-        <div class="pstat-div"></div>
-        <div class="pstat"><b data-count="98">0</b><i>%</i><span>Satisfaction</span></div>
       </div>
       <a href="about.html" class="promise-link">Read our story
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
@@ -1283,7 +1281,6 @@
 <script src="js/theme.js"></script>
 <script src="js/cursor.js"></script>
 <script type="module" src="js/house3d.js"></script>
-<script type="module" src="js/promise-house.js"></script>
 <script type="module" src="js/motion.js"></script>
 </body>
 </html>

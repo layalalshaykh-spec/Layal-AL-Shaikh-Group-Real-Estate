@@ -91,25 +91,58 @@ img{display:block;max-width:100%}
 /* =====================================================
    PRELOADER
    ===================================================== */
-.preloader{
-  position:fixed;inset:0;background:var(--m-black);z-index:99999;
-  display:flex;align-items:center;justify-content:center;
-  transition:opacity .9s var(--ease-out),visibility .9s
-}
-.preloader.done{opacity:0;visibility:hidden}
-.preloader-inner{text-align:center;display:flex;flex-direction:column;align-items:center;gap:28px}
-.pl-name{
-  font-family:var(--font-serif);font-size:1.9rem;font-weight:400;
-  letter-spacing:.22em;color:var(--w90)
-}
+/* The front door — opens on arrival */
+.preloader{position:fixed;inset:0;z-index:99999;overflow:hidden;background:#0a0805;
+  transition:visibility 0s linear 1.45s}
+.preloader.done{visibility:hidden}
+
+.door-leaf{position:absolute;top:0;bottom:0;width:50.5%;
+  background:
+    linear-gradient(90deg, rgba(0,0,0,.4), transparent 14%, transparent 86%, rgba(0,0,0,.4)),
+    repeating-linear-gradient(90deg, rgba(255,255,255,.012) 0 2px, transparent 2px 7px),
+    linear-gradient(180deg, #1e160d 0%, #150f08 52%, #0e0a05 100%);
+  transition:transform 1.2s cubic-bezier(.76,0,.24,1)}
+.door-left{left:0;box-shadow:inset -44px 0 90px rgba(0,0,0,.6)}
+.door-right{right:0;box-shadow:inset 44px 0 90px rgba(0,0,0,.6)}
+.door-panel{position:absolute;inset:13% 12%;border-radius:4px;
+  border:1px solid rgba(203,168,90,.22);
+  box-shadow:inset 0 0 50px rgba(0,0,0,.5), inset 0 1px 0 rgba(203,168,90,.12);
+  background:linear-gradient(180deg, rgba(203,168,90,.035), transparent 32%)}
+.door-panel::after{content:'';position:absolute;inset:8%;border:1px solid rgba(203,168,90,.12);border-radius:3px}
+.door-left .door-panel{left:18%;right:7%}
+.door-right .door-panel{right:18%;left:7%}
+
+.door-seam{position:absolute;left:50%;top:0;bottom:0;width:3px;transform:translateX(-50%);z-index:2;
+  background:linear-gradient(to bottom, transparent, rgba(244,205,114,.55) 26%, rgba(244,205,114,.6) 74%, transparent);
+  box-shadow:0 0 42px 6px rgba(244,205,114,.4);transition:opacity .7s,box-shadow .9s}
+
+.door-center{position:absolute;inset:0;z-index:3;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;transition:opacity .45s}
+.door-emblem{width:62px;height:62px;border:1px solid var(--gold);display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-serif);font-size:1.4rem;letter-spacing:.06em;color:var(--gold);
+  box-shadow:var(--gold-glow-s);background:rgba(203,168,90,.05)}
+.pl-name{font-family:var(--font-serif);font-size:1.7rem;font-weight:400;letter-spacing:.22em;color:var(--w90)}
 .pl-name span{color:var(--gold)}
-.pl-sub{font-size:.58rem;letter-spacing:.45em;color:var(--gold);text-transform:uppercase;opacity:.7}
-.preloader-bar{width:180px;height:1px;background:var(--w08)}
-.preloader-fill{
-  height:100%;width:0;
-  background:linear-gradient(90deg,var(--gold-dim),var(--gold-3));
-  transition:width .08s linear;
-  box-shadow:var(--gold-glow-s)
+.pl-sub{font-size:.58rem;letter-spacing:.4em;color:var(--gold);text-transform:uppercase;opacity:.82}
+.preloader-bar{width:170px;height:1px;background:var(--w08);overflow:hidden}
+.preloader-fill{height:100%;width:0;background:linear-gradient(90deg,var(--gold-dim),var(--gold-3));transition:width .08s linear;box-shadow:var(--gold-glow-s)}
+
+/* OPEN: doors part, warm light blooms, the home is revealed */
+.preloader.done .door-left{transform:translateX(-101%)}
+.preloader.done .door-right{transform:translateX(101%)}
+.preloader.done .door-center{opacity:0;transition:opacity .3s}
+.preloader.done .door-seam{opacity:0;box-shadow:0 0 160px 60px rgba(244,205,114,.5)}
+
+/* daytime door = light oak + sun */
+html.light .preloader{background:#efe6d4}
+html.light .door-leaf{background:
+  repeating-linear-gradient(90deg, rgba(120,90,40,.05) 0 2px, transparent 2px 7px),
+  linear-gradient(180deg,#e9dec7,#dccca9 52%,#cfbf98)}
+html.light .door-panel{border-color:rgba(150,118,46,.32)}
+html.light .pl-name{color:#2a2114}
+
+@media(prefers-reduced-motion:reduce){
+  .door-leaf{transition:none}
+  .preloader.done{opacity:0;transition:opacity .4s,visibility 0s linear .4s}
 }
 
 /* =====================================================
@@ -2276,8 +2309,7 @@ html:not(.light) .promise-scene:hover .scene-hint{opacity:0}
    (candle glows by night through the glass · sun shines by day)
    ===================================================== */
 .promise{position:relative;overflow:hidden;background:var(--m-black);
-  min-height:880px;display:flex;align-items:flex-start;
-  padding:clamp(60px,7vw,96px) 0 0}
+  min-height:clamp(560px,82vh,800px)}
 .promise>.container{position:relative;z-index:2;width:100%}
 
 /* ---- background scene ---- */
@@ -2311,7 +2343,7 @@ html.light .pb-sun{animation:sunRise 3s var(--ease-out) .3s forwards}
   opacity:.3;transition:opacity .7s}
 html:not(.light) .promise:hover .pb-bloom{opacity:.95}
 html.light .pb-bloom{opacity:.9;background:radial-gradient(ellipse at center, rgba(255,216,132,.62), rgba(244,196,99,.26) 45%, transparent 72%)}
-.pb-house{position:absolute;left:0;right:0;bottom:0;width:100%;height:70%;z-index:1;display:block;touch-action:none}
+.pb-house{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;display:block;touch-action:none}
 .pb-ground{position:absolute;left:0;right:0;bottom:0;height:14%;z-index:1;
   background:linear-gradient(to bottom, transparent, #060503 84%)}
 html.light .pb-ground{background:linear-gradient(to bottom, transparent, #c6b187 92%)}
@@ -2379,3 +2411,110 @@ html:not(.light) .promise:hover .house-door{fill:#f3c878}
 html:not(.light) .promise:hover .win-glow{opacity:.85}
 html:not(.light) .promise:hover .door-glow{opacity:.92}
 html:not(.light) .promise:hover .door-spill{opacity:.95}
+
+/* ---- Our Promise caption (3D/Blender villa is the hero) ---- */
+.promise-caption{position:absolute;z-index:3;
+  left:clamp(18px,5vw,72px);bottom:clamp(24px,6vh,60px);
+  max-width:min(440px,calc(100% - 36px));text-align:left;overflow:hidden;
+  padding:clamp(24px,2.2vw,34px);border-radius:20px;
+  background:linear-gradient(160deg, rgba(28,22,14,.66), rgba(16,12,8,.54));
+  backdrop-filter:blur(26px) saturate(170%);-webkit-backdrop-filter:blur(26px) saturate(170%);
+  border:1px solid rgba(203,168,90,.26);
+  box-shadow:0 30px 70px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.14)}
+.promise-caption::before{content:'';position:absolute;inset:0;pointer-events:none;z-index:0;border-radius:inherit;
+  background:linear-gradient(135deg, rgba(255,255,255,.14), transparent 42%)}
+.promise-caption>*{position:relative;z-index:1}
+.promise-caption .sec-label{margin-bottom:14px}
+.promise-caption .promise-text{font-family:var(--font-serif);font-size:clamp(1.2rem,1.55vw,1.55rem);
+  font-weight:400;line-height:1.45;color:var(--w80);margin-bottom:18px;max-width:none}
+.promise-caption .promise-text em{font-style:italic;color:var(--gold-2);text-shadow:0 0 24px rgba(203,168,90,.25)}
+.promise-caption .promise-stats{display:flex;align-items:center;justify-content:flex-start;gap:16px;margin-bottom:18px;flex-wrap:wrap}
+.promise-caption .pstat b{font-family:var(--font-serif);font-size:1.4rem;color:var(--gold-2);font-weight:500}
+.promise-caption .pstat i{font-family:var(--font-serif);font-style:normal;color:var(--gold-dim);font-size:.95rem;margin-left:1px}
+.promise-caption .pstat span{display:block;font-size:.52rem;letter-spacing:.12em;text-transform:uppercase;color:var(--w40);margin-top:3px;font-weight:600}
+.promise-caption .pstat-div{width:1px;height:30px;background:rgba(255,255,255,.12)}
+.promise-foot{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.promise-caption .promise-sign{display:flex;align-items:center;gap:12px;margin:0}
+.promise-caption .ps-avatar{width:42px;height:42px}
+.promise-caption .ps-name{font-size:1.1rem}
+.promise-caption .promise-link{white-space:nowrap}
+html.light .promise-caption{background:linear-gradient(160deg, rgba(255,255,255,.66), rgba(255,253,247,.52));
+  border-color:rgba(150,118,46,.24);box-shadow:0 30px 60px rgba(80,62,24,.14), inset 0 1px 0 rgba(255,255,255,.85)}
+@media(max-width:600px){
+  .promise-caption{left:12px;right:12px;bottom:14px;max-width:none;padding:20px}
+  .promise-caption .promise-stats{gap:12px}
+  .promise-caption .pstat-div{display:none}
+}
+
+/* =====================================================
+   A WALK THROUGH HOME — living rooms, day & night
+   One warm ambient ties the journey. Rooms with their own
+   imagery stay frosted glass; flat rooms get a photo that
+   dims to warm lamplight by night, opens to sun by day.
+   ===================================================== */
+body::before{content:'';position:fixed;inset:0;z-index:-2;pointer-events:none;background:var(--m-black)}
+body::after{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background:
+    radial-gradient(58% 46% at 50% -8%, rgba(203,168,90,.07), transparent 62%),
+    radial-gradient(50% 40% at 88% 36%, rgba(214,150,70,.055), transparent 60%),
+    radial-gradient(52% 44% at 8% 78%, rgba(203,168,90,.05), transparent 60%)}
+html.light body::after{background:
+  radial-gradient(58% 46% at 50% -8%, rgba(190,151,64,.1), transparent 62%),
+  radial-gradient(50% 40% at 88% 36%, rgba(214,170,90,.08), transparent 60%),
+  radial-gradient(52% 44% at 8% 78%, rgba(190,151,64,.08), transparent 60%)}
+
+/* rooms with their own card imagery → frosted glass over the ambient */
+.signature,.prop-section,.neighborhoods-section,.about-section{
+  background-color:rgba(20,16,11,.5) !important;background-image:none !important;
+  -webkit-backdrop-filter:blur(16px) saturate(125%);backdrop-filter:blur(16px) saturate(125%);
+  position:relative;z-index:1}
+html.light .signature,html.light .prop-section,html.light .neighborhoods-section,html.light .about-section{
+  background-color:rgba(248,244,236,.55) !important}
+
+/* flat rooms → a day/night PHOTO behind the glass content */
+.ptypes-section,.popres,.insights-section,.services-section,.testi-section,.contact-section{
+  position:relative;isolation:isolate;background:transparent !important}
+.ptypes-section::before,.popres::before,.insights-section::before,
+.services-section::before,.testi-section::before,.contact-section::before{
+  content:'';position:absolute;inset:0;z-index:-1;background-size:cover;background-position:center;
+  filter:brightness(.3) saturate(.7) contrast(1.06) sepia(.3);transition:filter .9s var(--ease)}
+.ptypes-section::after,.popres::after,.insights-section::after,
+.services-section::after,.testi-section::after,.contact-section::after{
+  content:'';position:absolute;inset:0;z-index:-1;pointer-events:none;
+  background:linear-gradient(rgba(14,11,7,.82),rgba(18,13,8,.76)),
+            radial-gradient(64% 54% at 50% 30%, rgba(214,150,70,.14), transparent 62%);
+  transition:background .9s var(--ease)}
+.ptypes-section::before{background-image:url('https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1400&q=80')}
+.popres::before{background-image:url('https://images.unsplash.com/photo-1493809842364-78817add7ffb?auto=format&fit=crop&w=1400&q=80')}
+.insights-section::before{background-image:url('https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=1400&q=80')}
+.services-section::before{background-image:url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1400&q=80')}
+.testi-section::before{background-image:url('https://images.unsplash.com/photo-1493809842364-78817add7ffb?auto=format&fit=crop&w=1400&q=80')}
+.contact-section::before{background-image:url('https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=1400&q=80')}
+/* DAY: photos brighten & cool, veil lightens, sun glow blooms */
+html.light .ptypes-section::before,html.light .popres::before,html.light .insights-section::before,
+html.light .services-section::before,html.light .testi-section::before,html.light .contact-section::before{
+  filter:brightness(1.02) saturate(1.05) contrast(1.0)}
+html.light .ptypes-section::after,html.light .popres::after,html.light .insights-section::after,
+html.light .services-section::after,html.light .testi-section::after,html.light .contact-section::after{
+  background:linear-gradient(rgba(250,246,238,.76),rgba(244,239,229,.64)),
+            radial-gradient(64% 54% at 50% 24%, rgba(255,214,130,.2), transparent 62%)}
+/* keep content above the room photo */
+.ptypes-section .container,.popres .container,.popres .popres-track,
+.insights-section .container,.services-section .container,
+.testi-section .container,.contact-section .container{position:relative;z-index:1}
+
+/* existing photos also respond to day/night */
+html.light .pcard-bg,html.light .hood-bg,html.light .sig-photo,
+html.light .pr-media img,html.light .gal-item img,html.light .about-img-main,html.light .about-img-sm{
+  filter:brightness(1.04) saturate(1.06) sepia(0) !important}
+
+/* threshold seam — warm doorway line between every room */
+.signature,.popres,.ptypes-section,.prop-section,.neighborhoods-section,
+.insights-section,.services-section,.about-section,.testi-section,.cta-section,.contact-section{
+  box-shadow:inset 0 1px 0 rgba(203,168,90,.3)}
+
+/* Blender villa render — swap dusk (night) ⇄ day with theme */
+.pb-house{object-position:center 58%}
+.pb-house-day{display:none}
+html.light .pb-house-night{display:none}
+html.light .pb-house-day{display:block}
