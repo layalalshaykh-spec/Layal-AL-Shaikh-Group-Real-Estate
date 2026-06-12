@@ -335,16 +335,7 @@ document.querySelectorAll('.hsg-tab').forEach(tab => {
   });
 });
 
-// ---- POPULAR RESIDENCES CAROUSEL ----
-(function () {
-  const track = document.getElementById('popTrack');
-  const prev  = document.getElementById('popPrev');
-  const next  = document.getElementById('popNext');
-  if (!track) return;
-  const amount = () => Math.min(track.clientWidth * 0.85, 660);
-  if (prev) prev.addEventListener('click', () => track.scrollBy({ left: -amount(), behavior: 'smooth' }));
-  if (next) next.addEventListener('click', () => track.scrollBy({ left:  amount(), behavior: 'smooth' }));
-})();
+// ---- POPULAR RESIDENCES — now a 3D coverflow deck (handled by js/deck.js) ----
 
 // ---- THEME TOGGLE handled by js/theme.js (sliding pill + reveal transition) ----
 
