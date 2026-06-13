@@ -3,10 +3,26 @@
 # Default document
 DirectoryIndex index.html
 
-# ---- Force HTTPS (Hostinger free SSL) ----
+# ---- Correct MIME types ----
+# CRITICAL: ES-module <script type="module"> only runs if .js is served with a
+# JavaScript MIME type. Combined with X-Content-Type-Options:nosniff below, a
+# wrong type makes the admin, Supabase data and carousels silently fail to load.
+<IfModule mod_mime.c>
+  AddType application/javascript   .js
+  AddType application/javascript   .mjs
+  AddType application/json         .json
+  AddType image/svg+xml            .svg
+  AddType image/webp               .webp
+  AddType image/avif               .avif
+  AddType font/woff2               .woff2
+  AddType font/woff                .woff
+</IfModule>
+
+# ---- Force HTTPS (proxy-safe: won't loop behind Hostinger's SSL terminator) ----
 <IfModule mod_rewrite.c>
   RewriteEngine On
-  RewriteCond %{HTTPS} !=on
+  RewriteCond %{HTTPS} off
+  RewriteCond %{HTTP:X-Forwarded-Proto} !https
   RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 </IfModule>
 
@@ -26,8 +42,8 @@ DirectoryIndex index.html
   ExpiresByType image/avif             "access plus 1 month"
   ExpiresByType image/svg+xml          "access plus 1 month"
   ExpiresByType font/woff2             "access plus 1 year"
-  ExpiresByType text/css               "access plus 1 hour"
-  ExpiresByType application/javascript "access plus 1 hour"
+  ExpiresByType text/css               "access plus 10 minutes"
+  ExpiresByType application/javascript "access plus 10 minutes"
   ExpiresByType text/html              "access plus 0 seconds"
 </IfModule>
 
@@ -37,11 +53,19 @@ DirectoryIndex index.html
   Header set X-Frame-Options "SAMEORIGIN"
   Header set Referrer-Policy "strict-origin-when-cross-origin"
   Header set Permissions-Policy "geolocation=(), microphone=(), camera=()"
-  # don't cache HTML so design updates show immediately
-  <FilesMatch "\.(html)$">
+  # always re-check HTML + JS so deploys show up quickly
+  <FilesMatch "\.(html|js)$">
     Header set Cache-Control "no-cache, must-revalidate"
   </FilesMatch>
 </IfModule>
 
-# ---- Pretty 404 (uncomment once you add 404.html) ----
-# ErrorDocument 404 /404.html
+# ---- Don't serve source/config files as pages ----
+<IfModule mod_authz_core.c>
+  <FilesMatch "\.(sql|py|md|json|gitignore|gitattributes)$">
+    Require all denied
+  </FilesMatch>
+  # keep the LLM + sitemap + robots readable
+  <FilesMatch "^(llms\.txt|robots\.txt|sitemap\.xml|site\.webmanifest)$">
+    Require all granted
+  </FilesMatch>
+</IfModule>
