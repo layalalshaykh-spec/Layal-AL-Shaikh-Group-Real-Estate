@@ -32,7 +32,6 @@
       </a>
       <ul class="nav-links" id="navLinks">${navLinks}</ul>
       <div class="nav-cta">
-        <a href="tel:+97412345678" class="nav-phone">+974 1234 5678</a>
         <button class="theme-toggle" id="themeToggle" role="switch" aria-label="Toggle dark and light mode">
           <span class="tt-label tt-dark">Dark</span>
           <span class="tt-label tt-light">Light</span>

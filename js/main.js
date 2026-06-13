@@ -337,6 +337,15 @@ document.querySelectorAll('.hsg-tab').forEach(tab => {
 
 // ---- POPULAR RESIDENCES — now a 3D coverflow deck (handled by js/deck.js) ----
 
+// ---- FAQ accordion (answers stay in the DOM for AEO; smooth height via grid-rows) ----
+document.querySelectorAll('.faq-q').forEach(q => {
+  q.addEventListener('click', () => {
+    const item = q.closest('.faq-item');
+    const open = item.classList.toggle('open');
+    q.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+});
+
 // ---- THEME TOGGLE handled by js/theme.js (sliding pill + reveal transition) ----
 
 // ---- LIGHT-HERO category pill ----

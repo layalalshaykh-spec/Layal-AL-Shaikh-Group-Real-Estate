@@ -1,5 +1,64 @@
+# Layal Alshaikh Group — robots.txt
+# Traditional search engines + everyone else
 User-agent: *
 Allow: /
 Disallow: /admin.html
 
+# ============================================================
+# AI / Answer engines — explicitly welcomed (AEO / GEO)
+# So ChatGPT, Gemini, Perplexity, Claude, etc. can read & cite us.
+# ============================================================
+User-agent: GPTBot
+Allow: /
+Disallow: /admin.html
+
+User-agent: OAI-SearchBot
+Allow: /
+Disallow: /admin.html
+
+User-agent: ChatGPT-User
+Allow: /
+Disallow: /admin.html
+
+User-agent: Google-Extended
+Allow: /
+Disallow: /admin.html
+
+User-agent: PerplexityBot
+Allow: /
+Disallow: /admin.html
+
+User-agent: Perplexity-User
+Allow: /
+Disallow: /admin.html
+
+User-agent: ClaudeBot
+Allow: /
+Disallow: /admin.html
+
+User-agent: anthropic-ai
+Allow: /
+Disallow: /admin.html
+
+User-agent: Claude-Web
+Allow: /
+Disallow: /admin.html
+
+User-agent: Applebot-Extended
+Allow: /
+Disallow: /admin.html
+
+User-agent: CCBot
+Allow: /
+Disallow: /admin.html
+
+User-agent: cohere-ai
+Allow: /
+Disallow: /admin.html
+
+User-agent: Meta-ExternalAgent
+Allow: /
+Disallow: /admin.html
+
 Sitemap: https://www.layalgroup.com/sitemap.xml
+# LLM-friendly summary: https://www.layalgroup.com/llms.txt
