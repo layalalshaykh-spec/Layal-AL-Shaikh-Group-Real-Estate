@@ -149,9 +149,20 @@
 
   // ---- Reveal on scroll ----
   const revObs = new IntersectionObserver((entries) => {
-    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); revObs.unobserve(e.target); } });
+    entries.forEach(e => { if (e.isIntersecting || e.boundingClientRect.top < 0) { e.target.classList.add('visible'); revObs.unobserve(e.target); } });
   }, { threshold: 0.12, rootMargin: '0px 0px -50px 0px' });
   document.querySelectorAll('.reveal-fade, .pcard').forEach(el => revObs.observe(el));
+  // Safety net: reveal anything scrolled fully past the top edge (instant jumps / Ctrl+End)
+  let _rRaf;
+  addEventListener('scroll', () => {
+    if (_rRaf) return;
+    _rRaf = requestAnimationFrame(() => {
+      _rRaf = null;
+      document.querySelectorAll('.reveal-fade:not(.visible), .pcard:not(.visible)').forEach(el => {
+        if (el.getBoundingClientRect().bottom < 0) el.classList.add('visible');
+      });
+    });
+  }, { passive: true });
 
   // ---- Counters ----
   function animCount(el, target, dur = 2000) {

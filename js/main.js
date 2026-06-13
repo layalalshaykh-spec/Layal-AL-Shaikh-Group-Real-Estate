@@ -111,7 +111,8 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
 // ---- SCROLL REVEAL ----
 const revealObs = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
-    if (entry.isIntersecting) {
+    // reveal when in view OR already scrolled past (never leave content stuck hidden)
+    if (entry.isIntersecting || entry.boundingClientRect.top < 0) {
       entry.target.classList.add('visible');
       revealObs.unobserve(entry.target);
     }
@@ -119,6 +120,18 @@ const revealObs = new IntersectionObserver((entries) => {
 }, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
 
 document.querySelectorAll('.reveal-fade').forEach(el => revealObs.observe(el));
+
+// Safety net: reveal anything scrolled fully past the top edge (covers instant jumps / Ctrl+End)
+let _revRaf;
+addEventListener('scroll', () => {
+  if (_revRaf) return;
+  _revRaf = requestAnimationFrame(() => {
+    _revRaf = null;
+    document.querySelectorAll('.reveal-fade:not(.visible)').forEach(el => {
+      if (el.getBoundingClientRect().bottom < 0) el.classList.add('visible');
+    });
+  });
+}, { passive: true });
 
 // Property cards stagger
 const pcardObs = new IntersectionObserver((entries) => {
