@@ -6,7 +6,7 @@ apartments and penthouses across The Pearl, Lusail and West Bay, with a luxury
 "matte‑black & gold" brand identity, a switchable **dark/light** theme, an
 animated 3D villa, and a content **admin portal**.
 
-> Live brand: info@layalgroup.com · www.layalgroup.com
+> Live brand: info@layalalshaikhgroup.com · layalalshaikhgroup.com
 
 ---
 

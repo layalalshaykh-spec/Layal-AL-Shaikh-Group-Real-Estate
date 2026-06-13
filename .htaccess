@@ -21,9 +21,15 @@ DirectoryIndex index.html
 # ---- Force HTTPS (proxy-safe: won't loop behind Hostinger's SSL terminator) ----
 <IfModule mod_rewrite.c>
   RewriteEngine On
+  # Force HTTPS (proxy-safe)
   RewriteCond %{HTTPS} off
   RewriteCond %{HTTP:X-Forwarded-Proto} !https
   RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+  # Clean URLs — serve /admin, /properties, /gallery, etc. without the .html extension
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteCond %{REQUEST_FILENAME}.html -f
+  RewriteRule ^(.+?)/?$ $1.html [L]
 </IfModule>
 
 # ---- Gzip / Brotli compression ----

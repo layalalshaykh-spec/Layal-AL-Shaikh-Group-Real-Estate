@@ -59,7 +59,7 @@
             </div>
             <p>Qatar's premier one-stop destination for luxury real estate advisory and comprehensive business setup solutions.</p>
             <div class="fb-contact">
-              <a href="mailto:info@layalgroup.com">info@layalgroup.com</a>
+              <a href="mailto:info@layalalshaikhgroup.com">info@layalalshaikhgroup.com</a>
               <a href="tel:+97412345678">+974 1234 5678</a>
             </div>
           </div>
