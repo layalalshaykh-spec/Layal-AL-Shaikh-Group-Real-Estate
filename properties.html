@@ -158,17 +158,51 @@
 <script src="js/cursor.js"></script>
 <script type="module" src="js/motion.js"></script>
 <script>
-  // Property filter tabs + save toggle
-  document.querySelectorAll('.ptab').forEach(tab => tab.addEventListener('click', () => {
-    document.querySelectorAll('.ptab').forEach(t => t.classList.remove('active'));
-    tab.classList.add('active');
-    const f = tab.dataset.filter;
-    document.querySelectorAll('.pcard').forEach(c => { c.style.display = (f === 'all' || c.dataset.type === f) ? '' : 'none'; });
-  }));
-  document.querySelectorAll('.pcard-save').forEach(b => b.addEventListener('click', e => {
-    e.preventDefault(); const on = b.dataset.on === '1'; b.dataset.on = on ? '0' : '1';
-    const svg = b.querySelector('svg'); svg.style.fill = on ? 'none' : '#c0392b'; svg.style.stroke = on ? '' : '#c0392b';
-  }));
+  // Property filter tabs + save toggle (.onclick so re-binding never duplicates)
+  function bindProps() {
+    document.querySelectorAll('.ptab').forEach(tab => { tab.onclick = () => {
+      document.querySelectorAll('.ptab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      const f = tab.dataset.filter;
+      document.querySelectorAll('.pcard').forEach(c => { c.style.display = (f === 'all' || c.dataset.type === f) ? '' : 'none'; });
+    }; });
+    document.querySelectorAll('.pcard-save').forEach(b => { b.onclick = e => {
+      e.preventDefault(); const on = b.dataset.on === '1'; b.dataset.on = on ? '0' : '1';
+      const svg = b.querySelector('svg'); svg.style.fill = on ? 'none' : '#c0392b'; svg.style.stroke = on ? '' : '#c0392b';
+    }; });
+  }
+  bindProps();
+  window.bindProps = bindProps;
+</script>
+<!-- Live listings from Supabase (falls back to the built-in listings if the database is empty) -->
+<script type="module">
+  import { supabase } from './js/supabase.js';
+  const FILTER = { Villa: 'villa', Apartment: 'apt', Penthouse: 'ph', Townhouse: 'villa', Commercial: 'comm' };
+  const SAVE = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>';
+  const PIN = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>';
+  const money = n => 'QAR ' + Number(n || 0).toLocaleString();
+  const esc = s => String(s || '').replace(/[<>"]/g, c => ({ '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  function card(r) {
+    const ft = FILTER[r.type] || 'villa';
+    const perSqm = r.area ? 'QAR ' + Math.round(r.price / r.area).toLocaleString() + ' / m²' : '';
+    return `<article class="pcard reveal-fade" data-type="${ft}">
+      <div class="pcard-media"><div class="pcard-bg" style="background-image:url('${esc(r.image_url)}')"></div><div class="pcard-dim"></div>
+        <div class="pcard-top-row"><span class="pbadge pbadge-white">${esc(r.type)}</span><button class="pcard-save" aria-label="Save">${SAVE}</button></div></div>
+      <div class="pcard-body"><div class="pcard-type">${esc(r.type)} · ${esc((r.location || '').split(',')[0])}</div><h3 class="pcard-name">${esc(r.name)}</h3>
+        <div class="pcard-loc">${PIN} ${esc(r.location)}</div>
+        <div class="pcard-specs-sm"><span>${r.beds} Bed</span><span>${r.baths} Bath</span><span>${r.area} m²</span></div>
+        <div class="pcard-footer"><div><div class="pcard-price">${money(r.price)}</div><div class="pcard-persqm">${perSqm}</div></div><a href="contact.html" class="pcard-btn">Enquire</a></div></div>
+    </article>`;
+  }
+  if (supabase) {
+    try {
+      const { data, error } = await supabase.from('villas').select('*').eq('status', 'live').order('sort', { ascending: true }).order('id', { ascending: false });
+      if (!error && data && data.length) {
+        document.querySelector('.prop-grid').innerHTML = data.map(card).join('');
+        if (window.bindProps) window.bindProps();
+      }
+    } catch (e) { /* keep built-in listings on any error */ }
+  }
 </script>
 </body>
 </html>

@@ -7,8 +7,8 @@
    Fill these in from: Supabase Dashboard → Project Settings →
    Data API (Project URL) and API Keys (anon / public key).
    ===================================================== */
-export const SUPABASE_URL      = 'YOUR_PROJECT_URL';   // e.g. https://abcdxyz.supabase.co
-export const SUPABASE_ANON_KEY = 'YOUR_ANON_KEY';      // the long "anon public" key
+export const SUPABASE_URL      = 'https://clepqziyqmxbyvgoxnrn.supabase.co';
+export const SUPABASE_ANON_KEY = 'sb_publishable_mucqR9zACe9P1BnMWqhNRQ_uMWEom7L';
 
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 

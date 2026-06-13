@@ -86,32 +86,51 @@
 <script src="js/cursor.js"></script>
 <script type="module" src="js/motion.js"></script>
 <script>
-  // Filters
-  const items = [...document.querySelectorAll('.gal-item')];
-  document.querySelectorAll('.gal-filter').forEach(f => f.addEventListener('click', () => {
-    document.querySelectorAll('.gal-filter').forEach(x => x.classList.remove('active'));
-    f.classList.add('active');
-    const c = f.dataset.cat;
-    items.forEach(it => it.style.display = (c === 'all' || it.dataset.cat === c) ? '' : 'none');
-  }));
-
-  // Lightbox
+  // ---- Lightbox (bound once) ----
   const lb = document.getElementById('lightbox'), lbC = document.getElementById('lbContent');
   let order = [], idx = 0;
-  function render() {
+  function lbRender() {
     const it = order[idx];
     if (it.dataset.video) lbC.innerHTML = `<video src="${it.dataset.video}" controls autoplay playsinline poster="${it.querySelector('img').src}"></video>`;
     else lbC.innerHTML = `<img src="${it.querySelector('img').src}" alt="">`;
   }
-  function open(it) { order = items.filter(i => i.style.display !== 'none'); idx = order.indexOf(it); render(); lb.classList.add('open'); document.body.style.overflow = 'hidden'; }
-  function close() { lb.classList.remove('open'); lbC.innerHTML = ''; document.body.style.overflow = ''; }
-  function move(d) { idx = (idx + d + order.length) % order.length; render(); }
-  items.forEach(it => it.addEventListener('click', () => open(it)));
-  document.getElementById('lbClose').addEventListener('click', close);
-  document.getElementById('lbPrev').addEventListener('click', e => { e.stopPropagation(); move(-1); });
-  document.getElementById('lbNext').addEventListener('click', e => { e.stopPropagation(); move(1); });
-  lb.addEventListener('click', e => { if (e.target === lb) close(); });
-  document.addEventListener('keydown', e => { if (!lb.classList.contains('open')) return; if (e.key === 'Escape') close(); if (e.key === 'ArrowLeft') move(-1); if (e.key === 'ArrowRight') move(1); });
+  function lbOpen(it) { order = [...document.querySelectorAll('.gal-item')].filter(i => i.style.display !== 'none'); idx = order.indexOf(it); lbRender(); lb.classList.add('open'); document.body.style.overflow = 'hidden'; }
+  function lbClose() { lb.classList.remove('open'); lbC.innerHTML = ''; document.body.style.overflow = ''; }
+  function lbMove(d) { idx = (idx + d + order.length) % order.length; lbRender(); }
+  document.getElementById('lbClose').addEventListener('click', lbClose);
+  document.getElementById('lbPrev').addEventListener('click', e => { e.stopPropagation(); lbMove(-1); });
+  document.getElementById('lbNext').addEventListener('click', e => { e.stopPropagation(); lbMove(1); });
+  lb.addEventListener('click', e => { if (e.target === lb) lbClose(); });
+  document.addEventListener('keydown', e => { if (!lb.classList.contains('open')) return; if (e.key === 'Escape') lbClose(); if (e.key === 'ArrowLeft') lbMove(-1); if (e.key === 'ArrowRight') lbMove(1); });
+
+  // ---- Re-bindable items + filters (.onclick so re-binding never duplicates) ----
+  function bindGallery() {
+    document.querySelectorAll('.gal-item').forEach(it => { it.onclick = () => lbOpen(it); });
+    document.querySelectorAll('.gal-filter').forEach(f => { f.onclick = () => {
+      document.querySelectorAll('.gal-filter').forEach(x => x.classList.remove('active'));
+      f.classList.add('active');
+      const c = f.dataset.cat;
+      document.querySelectorAll('.gal-item').forEach(it => it.style.display = (c === 'all' || it.dataset.cat === c) ? '' : 'none');
+    }; });
+  }
+  bindGallery();
+  window.bindGallery = bindGallery;
+</script>
+<!-- Live gallery from Supabase (falls back to the built-in photos if the database is empty) -->
+<script type="module">
+  import { supabase } from './js/supabase.js';
+  if (supabase) {
+    try {
+      const { data, error } = await supabase.from('gallery').select('*').order('sort', { ascending: true }).order('id', { ascending: false });
+      if (!error && data && data.length) {
+        document.querySelector('.gal-grid').innerHTML = data.map(g => {
+          const cap = (g.caption || 'Layal Alshaikh').replace(/"/g, '&quot;');
+          return `<div class="gal-item" data-cat="${g.category || 'exterior'}"><img loading="lazy" src="${g.image_url}" alt="${cap}"><div class="gal-item-overlay"><div><div class="gi-loc">${cap}</div><div class="gi-tag">${g.category || ''}</div></div></div></div>`;
+        }).join('');
+        if (window.bindGallery) window.bindGallery();
+      }
+    } catch (e) { /* keep built-in gallery on any error */ }
+  }
 </script>
 </body>
 </html>
