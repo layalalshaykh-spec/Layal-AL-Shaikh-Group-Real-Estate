@@ -359,6 +359,41 @@ document.querySelectorAll('.faq-q').forEach(q => {
   });
 });
 
+// ---- SIGNATURE MARK — scroll-morphing gold geometry + radiating line particles ----
+(function () {
+  const stage = document.getElementById('signmarkStage');
+  if (!stage) return;
+  const blocks = [...stage.querySelectorAll('.sm-block')];
+  const lines = [...stage.querySelectorAll('.sm-line')];
+  const nB = blocks.length, nL = lines.length;
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function frame(p) {
+    const m = Math.sin(p * Math.PI);                 // 0 at edges, 1 at centre
+    for (let i = 0; i < nB; i++) {
+      const ang = (i / nB) * 360 + p * 200;
+      const d = 9 + m * 52, spin = p * 250 + i * 16, s = 0.68 + m * 0.55;
+      blocks[i].setAttribute('transform', `rotate(${ang.toFixed(2)}) translate(${d.toFixed(2)},0) rotate(${spin.toFixed(2)}) scale(${s.toFixed(3)})`);
+      blocks[i].style.opacity = (0.4 + m * 0.6).toFixed(3);
+    }
+    for (let i = 0; i < nL; i++) {
+      const ang = (i / nL) * 360 + p * 120, len = 0.12 + m * 0.95;
+      lines[i].setAttribute('transform', `rotate(${ang.toFixed(2)}) scale(${len.toFixed(3)},1)`);
+      lines[i].style.opacity = (0.06 + m * 0.4).toFixed(3);
+    }
+  }
+  if (reduce) { frame(0.5); return; }
+  let ticking = false;
+  function update() {
+    ticking = false;
+    const r = stage.getBoundingClientRect();
+    const vh = window.innerHeight || 800;
+    frame(Math.max(0, Math.min(1, (vh - r.top) / (vh + r.height))));
+  }
+  window.addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
+  window.addEventListener('resize', update);
+  update();
+})();
+
 // ---- THEME TOGGLE handled by js/theme.js (sliding pill + reveal transition) ----
 
 // ---- LIGHT-HERO category pill ----
