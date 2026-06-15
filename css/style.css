@@ -1643,8 +1643,12 @@ blockquote{
     border-left:1px solid rgba(203,168,90,.22);
     box-shadow:-26px 0 70px rgba(0,0,0,.55)
   }
-  /* hamburger stays tappable above the drawer (to close) */
-  .hamburger{position:relative;z-index:3}
+  /* header layout: logo left, toggle + hamburger grouped on the right (fixes the
+     hamburger overflowing off-screen after the phone number was removed) */
+  .nav-container{padding-left:14px;padding-right:14px;gap:8px}
+  .nav-logo{margin-right:auto;min-width:0}
+  /* hamburger tappable above drawer; FIXED gap, not margin-left:auto (which pushed it off-screen) */
+  .hamburger{position:relative;z-index:3;margin-left:4px}
   /* dim scrim behind the drawer — tap outside the drawer to close, page can't scroll */
   body.nav-open{overflow:hidden}
   body.nav-open::after{
@@ -1654,6 +1658,16 @@ blockquote{
   }
 }
 @keyframes navScrimIn{from{opacity:0}to{opacity:1}}
+
+/* Small phones — compact the toggle (icon-only) + logo so the header never overflows */
+@media(max-width:460px){
+  .nav-container{padding-left:12px;padding-right:12px}
+  .logo-main{font-size:.86rem}
+  .logo-sub{font-size:.43rem;letter-spacing:.26em}
+  .nav-cta{gap:8px}
+  .navbar .theme-toggle{width:54px}
+  .navbar .tt-label{display:none}
+}
 
 /* =====================================================
    HERO GLASS SEARCH (centered)
