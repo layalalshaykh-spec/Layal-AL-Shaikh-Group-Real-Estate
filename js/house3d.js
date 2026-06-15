@@ -219,10 +219,17 @@
     tmy = e.clientY / window.innerHeight - 0.5;
   }, { passive: true });
 
+  // pause rendering when the 3D house is scrolled off-screen (saves GPU in light mode)
+  let onScreen = true;
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver((es) => { onScreen = es[0].isIntersecting; }, { threshold: 0 }).observe(canvas);
+  }
+
   let t = 0, sized = false;
   function loop() {
     requestAnimationFrame(loop);
     if (!document.documentElement.classList.contains('light')) return;
+    if (!onScreen) return;
     if (!canvas.clientWidth) return;
     if (!sized) { resize(); sized = true; }
     t += 0.0045;

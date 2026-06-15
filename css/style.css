@@ -1995,6 +1995,26 @@ html.light .signmark-stage::before{background:radial-gradient(circle at 50% 50%,
 @media(prefers-reduced-motion:reduce){.reveal-fade .sec-title{clip-path:none;transition:none}}
 
 /* =====================================================
+   PERFORMANCE — cut GPU / scroll cost (backdrop-filter is
+   the single most expensive CSS prop; the page had 68).
+   ===================================================== */
+/* (content-visibility was tried here but it suppressed the scroll-reveal observers,
+   leaving cards invisible — removed. The mobile flatten below is the real win.) */
+/* 2) Drop the (imperceptible) blur on tiny/numerous UI — a solid tint looks identical */
+.pcard-save,.pbadge,.pr-badge,.pr-price,.hsg-tab,.ptab,.deck-arrow,.popres-arrow,
+.sig-badge,.sig-tour,.sig-cta{backdrop-filter:none;-webkit-backdrop-filter:none}
+/* 3) On phones, flatten the remaining glass to solid tints (mobile GPUs can't blur 68 layers) */
+@media(max-width:768px){
+  .ptype-card,.care-item,.ins-card,.af-item,.faq-item,.hsg-bar,.sig-panel,.promise-caption,
+  .signature,.prop-section,.neighborhoods-section,.about-section,.section{
+    backdrop-filter:none !important;-webkit-backdrop-filter:none !important;
+  }
+  /* keep the (now blur-less) cards readable with a solid tint */
+  .ptype-card,.care-item,.ins-card,.af-item,.faq-item{background:rgba(30,24,15,.9)}
+  html.light .ptype-card,html.light .care-item,html.light .ins-card,html.light .af-item,html.light .faq-item{background:rgba(255,252,247,.94)}
+}
+
+/* =====================================================
    SCROLL-DRIVEN PARALLAX — section photos drift gently
    as they pass through the viewport. Pure CSS scroll
    timeline (no JS); browsers without support just show
