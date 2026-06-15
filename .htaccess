@@ -59,6 +59,10 @@ DirectoryIndex index.html
   Header set X-Frame-Options "SAMEORIGIN"
   Header set Referrer-Policy "strict-origin-when-cross-origin"
   Header set Permissions-Policy "geolocation=(), microphone=(), camera=()"
+  # Enforce HTTPS for a year (browsers refuse plain HTTP after first visit)
+  Header always set Strict-Transport-Security "max-age=31536000"
+  # Content-Security-Policy — only these sources may load; blocks injected/3rd-party scripts
+  Header set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://esm.sh; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://images.unsplash.com https://*.supabase.co; media-src 'self' blob: https://commondatastorage.googleapis.com https://*.supabase.co; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://esm.sh https://cdn.jsdelivr.net; frame-ancestors 'self'; base-uri 'self'; object-src 'none'; form-action 'self'"
   # always re-check HTML + JS so deploys show up quickly
   <FilesMatch "\.(html|js)$">
     Header set Cache-Control "no-cache, must-revalidate"

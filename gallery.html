@@ -123,9 +123,10 @@
     try {
       const { data, error } = await supabase.from('gallery').select('*').order('sort', { ascending: true }).order('id', { ascending: false });
       if (!error && data && data.length) {
+        const esc = s => String(s || '').replace(/[<>"&]/g, c => ({ '<': '&lt;', '>': '&gt;', '"': '&quot;', '&': '&amp;' }[c]));
         document.querySelector('.gal-grid').innerHTML = data.map(g => {
-          const cap = (g.caption || 'Layal Alshaikh').replace(/"/g, '&quot;');
-          return `<div class="gal-item" data-cat="${g.category || 'exterior'}"><img loading="lazy" src="${g.image_url}" alt="${cap}"><div class="gal-item-overlay"><div><div class="gi-loc">${cap}</div><div class="gi-tag">${g.category || ''}</div></div></div></div>`;
+          const cap = esc(g.caption || 'Layal Alshaikh'), cat = esc(g.category || 'exterior'), url = esc(g.image_url);
+          return `<div class="gal-item" data-cat="${cat}"><img loading="lazy" src="${url}" alt="${cap}"><div class="gal-item-overlay"><div><div class="gi-loc">${cap}</div><div class="gi-tag">${cat}</div></div></div></div>`;
         }).join('');
         if (window.bindGallery) window.bindGallery();
       }
