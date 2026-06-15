@@ -54,7 +54,7 @@
       <button class="gal-filter" data-cat="video">Video Tours</button>
     </div>
 
-    <div class="gal-grid" id="galGrid">
+    <div class="gal-grid g3d" id="galGrid">
       <div class="gal-item wide" data-cat="exterior"><img loading="lazy" src="https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=1100&q=80" alt="Villa exterior at dusk"><div class="gal-item-overlay"><div><div class="gi-loc">Porto Arabia Villa</div><div class="gi-tag">Exterior</div></div></div></div>
       <div class="gal-item tall" data-cat="interior"><img loading="lazy" src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=800&q=80" alt="Living room"><div class="gal-item-overlay"><div><div class="gi-loc">Open Living Space</div><div class="gi-tag">Interior</div></div></div></div>
       <div class="gal-item" data-cat="interior"><img loading="lazy" src="https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=800&q=80" alt="Interior"><div class="gal-item-overlay"><div><div class="gi-loc">Lounge</div><div class="gi-tag">Interior</div></div></div></div>
@@ -103,18 +103,49 @@
   lb.addEventListener('click', e => { if (e.target === lb) lbClose(); });
   document.addEventListener('keydown', e => { if (!lb.classList.contains('open')) return; if (e.key === 'Escape') lbClose(); if (e.key === 'ArrowLeft') lbMove(-1); if (e.key === 'ArrowRight') lbMove(1); });
 
+  // ---- 3D curved slider: each card angles by its distance from the scroll centre ----
+  const grid = document.getElementById('galGrid');
+  let raf = 0, dragged = false;
+  function update3d() {
+    raf = 0;
+    const mid = grid.scrollLeft + grid.clientWidth / 2;
+    grid.querySelectorAll('.gal-item').forEach(card => {
+      if (card.style.display === 'none') return;
+      const cc = card.offsetLeft + card.offsetWidth / 2;
+      let d = (cc - mid) / grid.clientWidth;
+      d = Math.max(-1.15, Math.min(1.15, d));
+      const rot = d * -50, tz = -Math.abs(d) * 165, sc = 1 - Math.min(Math.abs(d), 0.7) * 0.2;
+      card.style.transform = `translateZ(${tz}px) rotateY(${rot}deg) scale(${sc.toFixed(3)})`;
+      card.style.zIndex = String(100 - Math.round(Math.abs(d) * 100));
+      card.style.opacity = (1 - Math.min(Math.abs(d), 1) * 0.4).toFixed(3);
+    });
+  }
+  function on3d() { if (!raf) raf = requestAnimationFrame(update3d); }
+  grid.addEventListener('scroll', on3d, { passive: true });
+  window.addEventListener('resize', on3d);
+
+  // ---- drag to spin (mouse/pen only; touch uses native scroll) ----
+  let down = false, sx = 0, ssl = 0;
+  grid.addEventListener('pointerdown', e => { down = true; dragged = false; sx = e.clientX; ssl = grid.scrollLeft; if (e.pointerType !== 'touch') grid.classList.add('grabbing'); });
+  window.addEventListener('pointermove', e => { if (!down) return; const dx = e.clientX - sx; if (Math.abs(dx) > 6) dragged = true; if (e.pointerType !== 'touch') grid.scrollLeft = ssl - dx; });
+  window.addEventListener('pointerup', () => { down = false; grid.classList.remove('grabbing'); });
+
   // ---- Re-bindable items + filters (.onclick so re-binding never duplicates) ----
   function bindGallery() {
-    document.querySelectorAll('.gal-item').forEach(it => { it.onclick = () => lbOpen(it); });
+    grid.querySelectorAll('.gal-item').forEach(it => { it.onclick = e => { if (dragged) { e.preventDefault(); return; } lbOpen(it); }; });
     document.querySelectorAll('.gal-filter').forEach(f => { f.onclick = () => {
       document.querySelectorAll('.gal-filter').forEach(x => x.classList.remove('active'));
       f.classList.add('active');
       const c = f.dataset.cat;
-      document.querySelectorAll('.gal-item').forEach(it => it.style.display = (c === 'all' || it.dataset.cat === c) ? '' : 'none');
+      grid.querySelectorAll('.gal-item').forEach(it => it.style.display = (c === 'all' || it.dataset.cat === c) ? '' : 'none');
+      grid.scrollLeft = 0; on3d();
     }; });
+    on3d();
   }
   bindGallery();
   window.bindGallery = bindGallery;
+  window.addEventListener('load', () => setTimeout(on3d, 60));
+  setTimeout(on3d, 250);
 </script>
 <!-- Live gallery from Supabase (falls back to the built-in photos if the database is empty) -->
 <script type="module">
