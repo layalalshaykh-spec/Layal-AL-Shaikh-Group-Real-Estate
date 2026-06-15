@@ -135,18 +135,43 @@ import { supabase } from './supabase.js';
   F('addVillaBtn').addEventListener('click', () => openForm(0));
   F('cancelVilla').addEventListener('click', () => formCard.style.display = 'none');
 
-  // ---------- Image upload (to Supabase Storage) ----------
+  // ---------- Image upload — auto-convert to WebP + right-size, then to Supabase Storage ----------
+  function toWebp(file, maxW = 1920, quality = 0.82) {
+    return new Promise(resolve => {
+      // pass through what shouldn't be re-encoded (already webp, or vector/animated)
+      if (!file.type.startsWith('image/') || /image\/(webp|svg\+xml|gif)/.test(file.type)) return resolve({ blob: file, webp: false });
+      const r = new FileReader();
+      r.onload = e => {
+        const img = new Image();
+        img.onload = () => {
+          let w = img.naturalWidth, h = img.naturalHeight;
+          if (w > maxW) { h = Math.round(h * maxW / w); w = maxW; }       // cap width for the web
+          const c = document.createElement('canvas'); c.width = w; c.height = h;
+          c.getContext('2d').drawImage(img, 0, 0, w, h);
+          c.toBlob(b => resolve(b ? { blob: b, webp: true } : { blob: file, webp: false }), 'image/webp', quality);
+        };
+        img.onerror = () => resolve({ blob: file, webp: false });
+        img.src = e.target.result;
+      };
+      r.onerror = () => resolve({ blob: file, webp: false });
+      r.readAsDataURL(file);
+    });
+  }
   async function uploadTo(file, folder, btnId) {
     const btn = F(btnId), label = btn.textContent;
-    const safe = file.name.replace(/[^a-z0-9.\-_]/gi, '_'), path = folder + '/' + Date.now() + '-' + safe;
+    btn.textContent = 'Optimising…';
+    const { blob, webp } = await toWebp(file);
+    const base = (file.name.replace(/\.[^.]+$/, '').replace(/[^a-z0-9.\-_]/gi, '_')) || 'photo';
+    const name = webp ? base + '.webp' : file.name.replace(/[^a-z0-9.\-_]/gi, '_');
+    const path = folder + '/' + Date.now() + '-' + name;
     if (USE_DB) {
       btn.textContent = 'Uploading…';
-      const { error } = await supabase.storage.from('media').upload(path, file, { cacheControl: '3600', upsert: false });
+      const { error } = await supabase.storage.from('media').upload(path, blob, { cacheControl: '3600', upsert: false, contentType: webp ? 'image/webp' : (file.type || 'application/octet-stream') });
       if (error) { btn.textContent = '⚠ ' + error.message; return null; }
       btn.textContent = label;
       return supabase.storage.from('media').getPublicUrl(path).data.publicUrl;
     }
-    return await new Promise(res => { const r = new FileReader(); r.onload = ev => res(ev.target.result); r.readAsDataURL(file); });
+    return await new Promise(res => { const r = new FileReader(); r.onload = ev => res(ev.target.result); r.readAsDataURL(blob); });
   }
   F('vUpload').addEventListener('click', () => F('vFile').click());
   F('vFile').addEventListener('change', async e => {
