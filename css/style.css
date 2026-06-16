@@ -275,6 +275,8 @@ html.light .pl-name{color:#2a2114}
    FEATURED SHOWCASE — big image + title, thumbnail switch
    (video-inspired location/property/photo viewer). JS: showcase.js
    ===================================================== */
+/* a class rule's display beats the bare [hidden] attribute — enforce it */
+[hidden]{display:none !important}
 .showcase{margin-top:clamp(28px,4vw,48px)}
 .showcase-stage{position:relative;border-radius:22px;overflow:hidden;background:#0a0806;
   height:clamp(380px,54vw,560px);box-shadow:0 30px 80px rgba(0,0,0,.42)}
@@ -1932,7 +1934,7 @@ html.light .faq-item.open{border-color:rgba(160,124,40,.42);box-shadow:0 18px 46
   gap:clamp(14px,2.4vw,32px);
   overflow-x:auto;overflow-y:hidden;
   perspective:1500px;
-  scroll-snap-type:x mandatory;
+  scroll-snap-type:x proximity;
   padding:clamp(28px,5vw,56px) max(16px, calc((100% - clamp(230px,62vw,360px)) / 2)) clamp(46px,7vw,86px);
   -ms-overflow-style:none;scrollbar-width:none;cursor:grab;-webkit-overflow-scrolling:touch
 }
