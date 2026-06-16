@@ -21,20 +21,26 @@ import { supabase } from './supabase.js';
   const lsLoad = (k, seed) => { try { const v = JSON.parse(localStorage.getItem(k)); return v && v.length ? v : seed; } catch (e) { return seed; } };
   const lsSave = (k, v) => localStorage.setItem(k, JSON.stringify(v));
 
-  let villas = [], gallery = [];
+  let villas = [], gallery = [], announcements = [], settings = {};
+  const esc = s => String(s == null ? '' : s).replace(/[<>&"]/g, c => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;' }[c]));
 
   async function loadData() {
     if (USE_DB) {
-      const [v, g] = await Promise.all([
+      const [v, g, a, s] = await Promise.all([
         supabase.from('villas').select('*').order('id', { ascending: false }),
-        supabase.from('gallery').select('*').order('id', { ascending: false })
+        supabase.from('gallery').select('*').order('id', { ascending: false }),
+        supabase.from('announcements').select('*').order('sort', { ascending: true }).order('id', { ascending: false }),
+        supabase.from('site_settings').select('*')
       ]);
       if (v.error) console.warn('villas:', v.error.message);
       if (g.error) console.warn('gallery:', g.error.message);
       villas = (v.data || []).map(fromVilla);
       gallery = (g.data || []).map(fromGal);
+      announcements = a.error ? [] : (a.data || []);                 // tables may not exist yet → empty, no crash
+      settings = {}; (s.error ? [] : (s.data || [])).forEach(r => settings[r.key] = r.value);
     } else {
       villas = lsLoad(VK, seedVillas); gallery = lsLoad(GK, []);
+      announcements = lsLoad('la_ann', []); settings = (function(){ try { return JSON.parse(localStorage.getItem('la_set')) || {}; } catch(e){ return {}; } })();
     }
   }
 
@@ -87,7 +93,7 @@ import { supabase } from './supabase.js';
 
   // ---------- Render ----------
   const statusPill = s => `<span class="apill ${s === 'live' ? 'live' : 'draft'}">${s}</span>`;
-  function renderAll() { renderStats(); renderVillas(); renderGallery(); }
+  function renderAll() { renderStats(); renderVillas(); renderGallery(); renderAnnouncements(); renderSettings(); }
   function renderStats() {
     F('statTotal').textContent = villas.length;
     F('statLive').textContent = villas.filter(v => v.status === 'live').length;
@@ -229,5 +235,66 @@ import { supabase } from './supabase.js';
     const file = e.target.files[0]; if (!file) return;
     const url = await uploadTo(file, 'gallery', 'gUploadBtn');
     if (url) await addPhoto(url, F('gCat').value);
+  });
+
+  // ---------- Announcements ----------
+  const annPill = a => `<span class="apill ${a ? 'live' : 'draft'}">${a ? 'active' : 'hidden'}</span>`;
+  function renderAnnouncements() {
+    if (!F('annBody')) return;
+    F('annBody').innerHTML = announcements.map(a => `
+      <tr><td>${esc(a.message)}</td><td>${annPill(a.active)}</td>
+      <td style="white-space:nowrap"><button class="abtn ghost mini" data-aedit="${a.id}">Edit</button> <button class="abtn ghost mini danger" data-adel="${a.id}">Delete</button></td></tr>`).join('')
+      || '<tr><td colspan="3" style="color:var(--w30)">No announcements yet. Click “+ New Announcement”.</td></tr>';
+    document.querySelectorAll('[data-aedit]').forEach(b => b.addEventListener('click', () => openAnn(b.dataset.aedit)));
+    document.querySelectorAll('[data-adel]').forEach(b => b.addEventListener('click', () => delAnn(b.dataset.adel)));
+  }
+  const annForm = F('annFormCard');
+  function openAnn(id) {
+    if (!annForm) return;
+    annForm.style.display = '';
+    const a = id ? announcements.find(x => String(x.id) === String(id)) : null;
+    F('annFormTitle').textContent = a ? 'Edit Announcement' : 'New Announcement';
+    F('aId').value = a ? a.id : '';
+    F('aMsg').value = a ? a.message : '';
+    F('aLink').value = a ? (a.link || '') : '';
+    F('aLinkLabel').value = a ? (a.link_label || '') : '';
+    F('aActive').value = a ? String(a.active) : 'true';
+  }
+  if (F('addAnnBtn')) F('addAnnBtn').addEventListener('click', () => openAnn(0));
+  if (F('cancelAnn')) F('cancelAnn').addEventListener('click', () => annForm.style.display = 'none');
+  if (F('saveAnn')) F('saveAnn').addEventListener('click', async () => {
+    const row = { message: F('aMsg').value.trim() || 'Announcement', link: F('aLink').value.trim() || null, link_label: F('aLinkLabel').value.trim() || null, active: F('aActive').value === 'true' };
+    const id = F('aId').value;
+    if (USE_DB) {
+      const res = id ? await supabase.from('announcements').update(row).eq('id', id) : await supabase.from('announcements').insert(row);
+      if (res.error) return alert('Save failed: ' + res.error.message);
+    } else {
+      if (id) announcements = announcements.map(a => String(a.id) === String(id) ? { ...a, ...row } : a);
+      else announcements.unshift({ id: Date.now(), ...row });
+      lsSave('la_ann', announcements);
+    }
+    annForm.style.display = 'none'; await loadData(); renderAnnouncements();
+  });
+  async function delAnn(id) {
+    if (!confirm('Delete this announcement?')) return;
+    if (USE_DB) { const { error } = await supabase.from('announcements').delete().eq('id', id); if (error) return alert('Delete failed: ' + error.message); }
+    else { announcements = announcements.filter(a => String(a.id) !== String(id)); lsSave('la_ann', announcements); }
+    await loadData(); renderAnnouncements();
+  }
+
+  // ---------- Site Settings ----------
+  const SET_KEYS = { setPhone: 'phone', setWhatsapp: 'whatsapp', setEmail: 'email', setAddress: 'address', setHours: 'hours', setHeroSub: 'hero_sub', setInstagram: 'instagram', setLinkedin: 'linkedin' };
+  function renderSettings() {
+    if (!F('setPhone')) return;
+    for (const id in SET_KEYS) { const el = F(id); if (el) el.value = settings[SET_KEYS[id]] || ''; }
+  }
+  if (F('saveSettings')) F('saveSettings').addEventListener('click', async () => {
+    const rows = Object.keys(SET_KEYS).map(id => ({ key: SET_KEYS[id], value: F(id).value }));
+    const btn = F('saveSettings'), t = btn.textContent; btn.textContent = 'Saving…'; btn.disabled = true;
+    if (USE_DB) { const { error } = await supabase.from('site_settings').upsert(rows); if (error) { btn.textContent = t; btn.disabled = false; return alert('Save failed: ' + error.message); } }
+    else { rows.forEach(r => settings[r.key] = r.value); localStorage.setItem('la_set', JSON.stringify(settings)); }
+    btn.textContent = t; btn.disabled = false;
+    F('setStatus').textContent = '✓ Saved — live on your site'; setTimeout(() => F('setStatus').textContent = '', 3000);
+    await loadData();
   });
 })();

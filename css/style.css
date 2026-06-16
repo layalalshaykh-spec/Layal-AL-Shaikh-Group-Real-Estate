@@ -2015,6 +2015,23 @@ html.light .signmark-stage::before{background:radial-gradient(circle at 50% 50%,
 }
 
 /* =====================================================
+   ANNOUNCEMENT BANNER (admin-managed, top of every page)
+   ===================================================== */
+.site-announce{position:fixed;top:0;left:0;right:0;z-index:1003;
+  background:linear-gradient(90deg,var(--gold-dim),var(--gold) 50%,var(--gold-dim));
+  color:#1c1405;font-size:.8rem;font-weight:600;padding:9px 42px 9px 16px;box-shadow:0 2px 14px rgba(0,0,0,.28)}
+.sa-in{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;max-width:1100px;margin:0 auto;text-align:center}
+.sa-dot{width:7px;height:7px;border-radius:50%;background:#1c1405;flex-shrink:0;animation:saPulse 1.6s ease-in-out infinite}
+@keyframes saPulse{0%,100%{opacity:1}50%{opacity:.25}}
+.sa-link{color:#1c1405;text-decoration:underline;font-weight:800;white-space:nowrap}
+.sa-close{position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:none;color:#1c1405;font-size:1.3rem;cursor:pointer;line-height:1;padding:2px 8px;opacity:.7;transition:opacity .2s}
+.sa-close:hover{opacity:1}
+body.has-announce .navbar{top:48px}
+body.has-announce .navbar.scrolled{top:42px}
+@media(max-width:600px){.site-announce{font-size:.72rem;padding:8px 34px 8px 12px}.sa-in{gap:7px}body.has-announce .navbar{top:44px}}
+@media(prefers-reduced-motion:reduce){.sa-dot{animation:none}}
+
+/* =====================================================
    SCROLL-DRIVEN PARALLAX — section photos drift gently
    as they pass through the viewport. Pure CSS scroll
    timeline (no JS); browsers without support just show
