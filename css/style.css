@@ -271,6 +271,47 @@ html.light .pl-name{color:#2a2114}
 .nav-logo:hover .logo-mark-img{transform:scale(1.05)}
 @media(max-width:560px){.logo-mark-img{height:34px}}
 
+/* =====================================================
+   FEATURED SHOWCASE — big image + title, thumbnail switch
+   (video-inspired location/property/photo viewer). JS: showcase.js
+   ===================================================== */
+.showcase{margin-top:clamp(28px,4vw,48px)}
+.showcase-stage{position:relative;border-radius:22px;overflow:hidden;background:#0a0806;
+  height:clamp(380px,54vw,560px);box-shadow:0 30px 80px rgba(0,0,0,.42)}
+.sc-bg{position:absolute;inset:0;background-size:cover;background-position:center;
+  transition:opacity .5s var(--ease);animation:scZoom 11s ease-in-out infinite alternate}
+@keyframes scZoom{from{transform:scale(1.04)}to{transform:scale(1.13)}}
+.sc-veil{position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(90deg, rgba(8,6,4,.88), rgba(8,6,4,.42) 55%, rgba(8,6,4,.04)),
+            linear-gradient(to top, rgba(8,6,4,.82), transparent 56%)}
+.sc-info{position:absolute;left:0;bottom:0;padding:clamp(24px,4vw,52px);max-width:640px;z-index:1;
+  transition:opacity .45s var(--ease),transform .45s var(--ease)}
+.showcase-stage.switching .sc-info{opacity:0;transform:translateY(14px)}
+.showcase-stage.switching .sc-bg{opacity:.18}
+.sc-tag{display:inline-block;font-size:.6rem;font-weight:800;letter-spacing:.18em;text-transform:uppercase;
+  color:#1c1405;background:var(--gold);padding:5px 12px;border-radius:100px;margin-bottom:14px}
+.sc-name{font-family:var(--font-serif);font-size:clamp(2.2rem,5.6vw,4.2rem);font-weight:500;color:#fff;
+  line-height:1.02;letter-spacing:-.01em;text-shadow:0 4px 30px rgba(0,0,0,.55)}
+.sc-desc{font-size:clamp(.9rem,1.5vw,1.05rem);color:rgba(255,255,255,.87);line-height:1.65;margin-top:13px;max-width:470px}
+.sc-meta{font-size:.78rem;letter-spacing:.04em;color:var(--gold-3);margin-top:13px;font-weight:600}
+.sc-cta{display:inline-flex;align-items:center;gap:8px;margin-top:22px;padding:13px 26px;border-radius:100px;
+  background:linear-gradient(135deg,var(--gold-3),var(--gold) 55%,var(--gold-dim));color:#1c1405;
+  font-size:.72rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+  box-shadow:0 10px 30px rgba(203,168,90,.4);transition:transform var(--t2),box-shadow var(--t2)}
+.sc-cta:hover{transform:translateY(-2px);box-shadow:0 16px 40px rgba(203,168,90,.55)}
+.showcase-rail{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(8px,1.4vw,16px);margin-top:14px}
+.sc-thumb{position:relative;height:clamp(72px,9vw,104px);border-radius:14px;overflow:hidden;cursor:pointer;
+  border:2px solid transparent;background-size:cover;background-position:center;padding:0;
+  transition:border-color var(--t2),transform var(--t2),filter var(--t2);filter:saturate(.9) brightness(.6)}
+.sc-thumb::after{content:'';position:absolute;inset:0;background:linear-gradient(to top, rgba(8,6,4,.85), transparent 70%)}
+.sc-thumb span{position:absolute;left:10px;bottom:8px;z-index:1;font-size:.7rem;font-weight:700;color:#fff;
+  letter-spacing:.02em;text-shadow:0 1px 5px rgba(0,0,0,.7)}
+.sc-thumb:hover{filter:saturate(1) brightness(.82);transform:translateY(-2px)}
+.sc-thumb.active{border-color:var(--gold);filter:saturate(1.05) brightness(1);box-shadow:0 8px 24px rgba(203,168,90,.42)}
+html.light .showcase-stage{box-shadow:0 24px 60px rgba(80,62,24,.2)}
+@media(max-width:560px){.showcase-rail{grid-template-columns:repeat(2,1fr)}.sc-thumb{height:84px}}
+@media(prefers-reduced-motion:reduce){.sc-bg{animation:none}.showcase-stage.switching .sc-bg{opacity:1}}
+
 .nav-links{display:flex;align-items:center;gap:30px;margin-left:auto}
 .nav-links a{
   font-size:.7rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--w50);
