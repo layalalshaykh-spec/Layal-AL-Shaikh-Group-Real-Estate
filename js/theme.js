@@ -15,12 +15,23 @@
     try { localStorage.setItem('theme', toLight ? 'light' : 'dark'); } catch (e) {}
   }
 
+  // A View Transition can leave position:fixed + backdrop-filter elements (the navbar)
+  // visually stuck on the OLD theme. Force them to re-render after the switch.
+  function repaintFixed() {
+    document.querySelectorAll('.navbar').forEach((n) => {
+      const d = n.style.display;
+      n.style.display = 'none';
+      void n.offsetWidth;            // reflow
+      n.style.display = d;
+    });
+  }
+
   function onToggle(e) {
     const toLight = !root.classList.contains('light');
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     // No View Transitions support (or reduced motion) -> instant switch
-    if (!document.startViewTransition || reduce) { setTheme(toLight); return; }
+    if (!document.startViewTransition || reduce) { setTheme(toLight); repaintFixed(); return; }
 
     // origin of the reveal = centre of the toggle
     const btn = e.currentTarget;
@@ -36,6 +47,8 @@
         { duration: 680, easing: 'cubic-bezier(.4,0,.2,1)', pseudoElement: '::view-transition-new(root)' }
       );
     });
+    vt.finished.then(repaintFixed).catch(repaintFixed);
+    setTimeout(repaintFixed, 950);   // safety net if vt.finished is delayed
   }
 
   function bind() {
