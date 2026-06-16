@@ -24,7 +24,7 @@
   <nav class="navbar" id="navbar">
     <div class="nav-container">
       <a href="index.html" class="nav-logo">
-        <div class="logo-mark">LA</div>
+        <img class="logo-mark-img" src="assets/logo-mark.webp" alt="Layal Alshaikh Group" width="32" height="42">
         <div class="logo-text-group">
           <span class="logo-main">LAYAL <span class="gold-text">ALSHAIKH</span></span>
           <span class="logo-sub">GROUP · QATAR</span>

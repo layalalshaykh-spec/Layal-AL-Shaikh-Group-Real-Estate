@@ -266,6 +266,10 @@ html.light .pl-name{color:#2a2114}
 .logo-text-group{display:flex;flex-direction:column;line-height:1;gap:3px}
 .logo-main{font-family:var(--font-serif);font-size:.95rem;font-weight:500;color:var(--w90);letter-spacing:.12em}
 .logo-sub{font-size:.46rem;letter-spacing:.3em;color:var(--gold);text-transform:uppercase;font-weight:500;opacity:.75}
+/* New brand monogram in the header (replaces the LA box) */
+.logo-mark-img{height:40px;width:auto;display:block;flex-shrink:0;filter:drop-shadow(0 1px 4px rgba(0,0,0,.28));transition:transform var(--t1)}
+.nav-logo:hover .logo-mark-img{transform:scale(1.05)}
+@media(max-width:560px){.logo-mark-img{height:34px}}
 
 .nav-links{display:flex;align-items:center;gap:30px;margin-left:auto}
 .nav-links a{
